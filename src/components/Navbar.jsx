@@ -50,7 +50,7 @@ export default function Navbar() {
             <div className="navbar__logo-diamond" />
             <span className="navbar__logo-text">Goddess</span>
           </div>
-          <span className="navbar__logo-subtitle">Angel&apos;s Domain</span>
+          <span className="navbar__logo-subtitle">Mikky&apos;s Domain</span>
         </Link>
 
         {/* Desktop Links */}
@@ -75,9 +75,15 @@ export default function Navbar() {
           <button className="navbar__cta" id="nav-vip-btn" onClick={handleAuthAction}>
             {user ? 'Log Out' : 'Authenticate'}
           </button>
-          <div className="navbar__avatar" id="nav-avatar">
-            <span style={{ fontSize: '1rem' }}>👑</span>
-          </div>
+          {user ? (
+            <Link to="/profile" className="navbar__avatar" id="nav-avatar" title="View Profile">
+              <span style={{ fontSize: '1rem' }}>👤</span>
+            </Link>
+          ) : (
+            <div className="navbar__avatar" id="nav-avatar">
+              <span style={{ fontSize: '1rem' }}>👑</span>
+            </div>
+          )}
 
           {/* Mobile Toggle */}
           <button
