@@ -211,3 +211,15 @@
   color: var(--color-gold-hover);
   text-decoration: underline;
 }
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+  .login-container {
+    padding: 32px 24px;
+    width: 90%;
+    max-width: 100%;
+  }
+  .login-title {
+    font-size: 1.8rem;
+  }
+}

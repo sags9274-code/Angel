@@ -45,10 +45,7 @@
     columns: 2;
   }
 
-  /* Profile Card */
-  .profile-card {
-    width: 300px;
-  }
+  /* Profile Card removed hardcoded width */
 }
 
 /* ----- MOBILE DEVICES (< 768px) ----- */
@@ -156,10 +153,7 @@
     align-items: center;
   }
   
-  /* Profile Card */
-  .profile-card {
-    width: 260px;
-  }
+  /* Profile Card Name */
   .profile-card__name {
     font-size: 1.2rem;
   }
