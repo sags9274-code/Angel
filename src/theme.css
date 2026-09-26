@@ -1,0 +1,137 @@
+/* ================================================================
+   FINDOM / FEMDOM THEME & ANIMATIONS OVERRIDE
+   ================================================================ */
+
+/* ----- GLOBAL THEME ADJUSTMENTS ----- */
+body {
+  background: radial-gradient(circle at top right, #1a0f00 0%, var(--color-bg-primary) 40%);
+}
+
+.page__title {
+  animation: float-up-fade 1s var(--ease-out) both;
+}
+
+/* ----- BUTTON ANIMATIONS ----- */
+.hero__cta-primary,
+.navbar__cta,
+.wishlist__tribute-btn,
+.wall__upload-submit,
+.contracts__submit,
+.login-submit-btn {
+  /* Shimmer setup */
+  background: linear-gradient(
+    110deg,
+    var(--color-gold) 0%,
+    var(--color-gold) 40%,
+    var(--color-gold-hover) 50%,
+    var(--color-gold) 60%,
+    var(--color-gold) 100%
+  );
+  background-size: 200% auto;
+  animation: heartbeat-pulse 3s infinite ease-in-out, shimmer-sweep 4s infinite linear;
+  box-shadow: 0 0 15px rgba(212, 168, 67, 0.3);
+}
+
+.hero__cta-primary:hover,
+.navbar__cta:hover,
+.wishlist__tribute-btn:hover,
+.wall__upload-submit:hover,
+.contracts__submit:hover,
+.login-submit-btn:hover {
+  background-size: 200% auto;
+  animation: shimmer-sweep 2s infinite linear; /* Faster shimmer on hover */
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 12px 30px rgba(212, 168, 67, 0.5), 0 0 40px rgba(153, 0, 0, 0.4);
+  color: #000;
+  text-shadow: none;
+}
+
+/* Red accent on secondary / destructive actions */
+.hero__cta-secondary:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+  background: rgba(153, 0, 0, 0.05);
+  box-shadow: 0 0 20px rgba(153, 0, 0, 0.3);
+}
+
+.wall__card-delete {
+  background: var(--color-accent);
+}
+.wall__card-delete:hover {
+  background: var(--color-accent-hover);
+  box-shadow: 0 0 15px rgba(153, 0, 0, 0.8);
+}
+
+/* ----- PROFILE CARD LEVITATION ----- */
+.profile-card {
+  animation: levitate 6s infinite ease-in-out;
+  border: 1px solid rgba(212, 168, 67, 0.2);
+}
+
+.profile-card__badge {
+  background: rgba(153, 0, 0, 0.8); /* Red accent badge */
+  border-color: var(--color-accent);
+  color: white;
+  animation: heartbeat-pulse 2s infinite;
+}
+
+/* ----- STAGGERED ENTRANCES (Wishlist, Wall, Tasks) ----- */
+.wishlist__card,
+.wall__card,
+.tasks__card,
+.contracts__field {
+  animation: float-up-fade 0.8s var(--ease-out) both;
+}
+
+.wishlist__card:nth-child(1) { animation-delay: 0.1s; }
+.wishlist__card:nth-child(2) { animation-delay: 0.2s; }
+.wishlist__card:nth-child(3) { animation-delay: 0.3s; }
+.wishlist__card:nth-child(4) { animation-delay: 0.4s; }
+.wishlist__card:nth-child(n+5) { animation-delay: 0.5s; }
+
+.wall__card:nth-child(1) { animation-delay: 0.1s; }
+.wall__card:nth-child(2) { animation-delay: 0.2s; }
+.wall__card:nth-child(3) { animation-delay: 0.3s; }
+.wall__card:nth-child(4) { animation-delay: 0.4s; }
+.wall__card:nth-child(n+5) { animation-delay: 0.5s; }
+
+.tasks__card:nth-child(1) { animation-delay: 0.1s; }
+.tasks__card:nth-child(2) { animation-delay: 0.2s; }
+.tasks__card:nth-child(3) { animation-delay: 0.3s; }
+.tasks__card:nth-child(4) { animation-delay: 0.4s; }
+.tasks__card:nth-child(n+5) { animation-delay: 0.5s; }
+
+/* ----- HYPNOTIC LOGO / BRANDING ----- */
+.navbar__logo-diamond {
+  animation: hypnotic-glow 3s infinite ease-in-out;
+  background: var(--color-gold);
+}
+
+.navbar__logo-text {
+  text-shadow: 0 0 10px rgba(212, 168, 67, 0.3);
+}
+
+/* Add a gold vignette to the hero to make it feel more luxurious */
+.hero__bg-vignette {
+  background: radial-gradient(ellipse at center, transparent 30%, rgba(10, 8, 5, 0.9) 100%);
+}
+
+/* Subtle gold dust particles in the background (using CSS pseudo-elements) */
+body::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-image: 
+    radial-gradient(1px 1px at 20px 30px, rgba(212,168,67,0.3), transparent),
+    radial-gradient(1px 1px at 40px 70px, rgba(212,168,67,0.3), transparent),
+    radial-gradient(2px 2px at 90px 40px, rgba(212,168,67,0.4), transparent),
+    radial-gradient(1.5px 1.5px at 160px 120px, rgba(212,168,67,0.2), transparent);
+  background-size: 200px 200px;
+  z-index: -1;
+  opacity: 0.6;
+  pointer-events: none;
+  animation: float-up-fade 20s linear infinite alternate;
+}
