@@ -50,7 +50,7 @@ export default function Navbar() {
             <div className="navbar__logo-diamond" />
             <span className="navbar__logo-text">Goddess</span>
           </div>
-          <span className="navbar__logo-subtitle">Mikky&apos;s Domain</span>
+          <span className="navbar__logo-subtitle">Angel&apos;s Domain</span>
         </Link>
 
         {/* Desktop Links */}
