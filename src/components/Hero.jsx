@@ -29,7 +29,7 @@ export default function Hero() {
 
           {/* Main Heading */}
           <div className="hero__heading">
-            <h1 className="hero__heading-line1">Hi I&apos;m Angel.</h1>
+            <h1 className="hero__heading-line1">Hi I&apos;m Mikky.</h1>
             <p className="hero__heading-line2">I&apos;ll ruin you loser.</p>
           </div>
 

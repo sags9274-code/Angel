@@ -1,4 +1,4 @@
-import profileImage from '../assets/profile.jpeg';
+import profileImage from '../assets/mikky.jpeg';
 
 export default function ProfileCard() {
   return (
@@ -10,7 +10,7 @@ export default function ProfileCard() {
       <div className="profile-card__image-wrapper">
         <img
           src={profileImage}
-          alt="Angel - Creator & Tastemaker"
+          alt="Mikky - Creator & Tastemaker"
           className="profile-card__image"
           loading="eager"
         />

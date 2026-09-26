@@ -1,254 +1,76 @@
-import { useState, useRef } from 'react';
-
-const WISHLIST_ITEMS = [
-  {
-    id: 'designer-handbag',
-    name: 'Designer Handbag',
-    price: '$2,500',
-    numericPrice: 2500,
-    priority: 'High',
-    emoji: '👜',
-  },
-  {
-    id: 'luxury-perfume',
-    name: 'Luxury Perfume',
-    price: '$350',
-    numericPrice: 350,
-    priority: 'Medium',
-    emoji: '✨',
-  },
-  {
-    id: 'weekend-getaway',
-    name: 'Weekend Getaway',
-    price: '$5,000',
-    numericPrice: 5000,
-    priority: 'High',
-    emoji: '✈️',
-  },
-  {
-    id: 'fine-dining',
-    name: 'Fine Dining',
-    price: '$500',
-    numericPrice: 500,
-    priority: 'Medium',
-    emoji: '🍾',
-  },
-  {
-    id: 'spa-day',
-    name: 'Spa Day',
-    price: '$800',
-    numericPrice: 800,
-    priority: 'Low',
-    emoji: '🧖‍♀️',
-  },
-  {
-    id: 'jewelry-set',
-    name: 'Jewelry Set',
-    price: '$1,200',
-    numericPrice: 1200,
-    priority: 'High',
-    emoji: '💎',
-  },
-  {
-    id: 'silk-robe',
-    name: 'Silk Robe',
-    price: '$250',
-    numericPrice: 250,
-    priority: 'Low',
-    emoji: '👘',
-  },
-  {
-    id: 'cash-tribute',
-    name: 'Cash Tribute',
-    price: '$100+',
-    numericPrice: 100,
-    priority: 'Medium',
-    emoji: '💸',
-  },
-];
+import './Wishlist.css';
+import mikkyImage from '../assets/mikky.jpeg';
+import { X, MoreHorizontal, Link as LinkIcon } from 'lucide-react';
 
 export default function Wishlist() {
-  const [tributeAmount, setTributeAmount] = useState('');
-  const [tributeMessage, setTributeMessage] = useState('');
-  const [submittedStatus, setSubmittedStatus] = useState(null);
-
-  const tributeRef = useRef(null);
-
-  const handleSendGift = (item) => {
-    setTributeAmount(item.numericPrice.toString());
-    setTributeMessage(`Tribute offering for ${item.name} (${item.price})`);
-    setSubmittedStatus(null);
-
-    if (tributeRef.current) {
-      tributeRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  const links = [
+    {
+      id: 1,
+      title: 'www.g2a.com',
+      url: 'https://www.g2a.com',
+      hasAvatar: false,
+    },
+    {
+      id: 2,
+      title: 'Goddess mikky✨',
+      url: '#',
+      hasAvatar: true,
     }
-  };
-
-  const handleTributeSubmit = (e) => {
-    e.preventDefault();
-    if (!tributeAmount || Number(tributeAmount) <= 0) return;
-
-    setSubmittedStatus({
-      amount: tributeAmount,
-      message: tributeMessage,
-    });
-  };
-
-  const handleReset = () => {
-    setTributeAmount('');
-    setTributeMessage('');
-    setSubmittedStatus(null);
-  };
+  ];
 
   return (
-    <div className="page wishlist-page" id="wishlist-page">
-      {/* Page Header */}
-      <header className="page__header" id="wishlist-header">
-        <h1 className="page__title" id="wishlist-title">
-          Tribute &amp; Worship
-        </h1>
-        <p className="page__subtitle" id="wishlist-subtitle">
-          Beg to spoil your Supreme Goddess. Only generous subs are acknowledged.
-        </p>
-      </header>
-
-      {/* Grid of Wishlist Gift Cards */}
-      <div className="wishlist__grid" id="wishlist-grid">
-        {WISHLIST_ITEMS.map((item) => (
-          <div
-            key={item.id}
-            className="wishlist__card"
-            id={`wishlist-card-${item.id}`}
-          >
-            <div className="wishlist__card-header">
-              <span
-                className="wishlist__card-icon"
-                id={`wishlist-icon-${item.id}`}
-                aria-hidden="true"
-              >
-                {item.emoji}
-              </span>
-              <span
-                className={`wishlist__card-priority wishlist__card-priority--${item.priority.toLowerCase()} wishlist__badge wishlist__badge--${item.priority.toLowerCase()}`}
-                id={`wishlist-badge-${item.id}`}
-              >
-                {item.priority}
-              </span>
-            </div>
-
-            <div
-              className="wishlist__card-name"
-              id={`wishlist-name-${item.id}`}
-            >
-              {item.name}
-            </div>
-
-            <div
-              className="wishlist__card-price"
-              id={`wishlist-price-${item.id}`}
-            >
-              {item.price}
-            </div>
-
-            <button
-              type="button"
-              className="wishlist__card-btn"
-              id={`wishlist-send-btn-${item.id}`}
-              onClick={() => handleSendGift(item)}
-            >
-              Offer to Buy
-            </button>
-          </div>
-        ))}
+    <div className="linktree-container">
+      {/* Background SVG pattern to mimic the wavy camouflage */}
+      <div className="linktree-bg">
+        <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" opacity="0.6">
+          <defs>
+            <pattern id="wavy" x="0" y="0" width="120" height="120" patternUnits="userSpaceOnUse">
+              <path d="M0 30 Q30 0 60 30 T120 30 L120 120 L0 120 Z" fill="rgba(255,255,255,0.05)"/>
+              <path d="M0 60 Q30 30 60 60 T120 60 L120 120 L0 120 Z" fill="rgba(255,255,255,0.08)"/>
+              <path d="M0 90 Q30 60 60 90 T120 90 L120 120 L0 120 Z" fill="rgba(255,255,255,0.1)"/>
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#wavy)" />
+        </svg>
       </div>
 
-      {/* Tribute Section */}
-      <section
-        className="wishlist__tribute"
-        id="wishlist-tribute"
-        ref={tributeRef}
-      >
-        <h2 className="wishlist__tribute-title" id="tribute-title">
-          Beg to Pay a Custom Amount
-        </h2>
-
-        {submittedStatus ? (
-          <div
-            className="wishlist__tribute-success"
-            id="tribute-success"
-          >
-            <p className="wishlist__tribute-success-title">
-              Tribute Received
-            </p>
-            <p className="wishlist__tribute-success-text">
-              Your tribute of{' '}
-              <strong className="wishlist__tribute-success-amount">
-                ${Number(submittedStatus.amount).toLocaleString()}
-              </strong>{' '}
-              has been presented to your Goddess.
-            </p>
-            {submittedStatus.message && (
-              <p className="wishlist__tribute-success-note">
-                &ldquo;{submittedStatus.message}&rdquo;
-              </p>
-            )}
-            <button
-              type="button"
-              className="wishlist__tribute-btn"
-              id="tribute-reset-btn"
-              onClick={handleReset}
-            >
-              Send Another Tribute
-            </button>
+      <div className="linktree-content">
+        <div className="linktree-header">
+          <div className="linktree-avatar-wrapper">
+            <img src={mikkyImage} alt="Goddess Mikky" className="linktree-avatar" />
           </div>
-        ) : (
-          <form
-            className="wishlist__tribute-form"
-            id="tribute-form"
-            onSubmit={handleTributeSubmit}
-          >
-            <div className="wishlist__tribute-amount-wrapper">
-              <span
-                className="wishlist__tribute-currency"
-                id="tribute-currency-prefix"
-                aria-hidden="true"
-              >
-                $
-              </span>
-              <input
-                type="number"
-                id="tribute-amount"
-                name="tributeAmount"
-                className="wishlist__tribute-input"
-                placeholder="Amount"
-                min="1"
-                step="any"
-                value={tributeAmount}
-                onChange={(e) => setTributeAmount(e.target.value)}
-                required
-              />
-            </div>
+          <h1 className="linktree-title">Goddess mikky</h1>
+          <p className="linktree-subtitle">Making men weak 😈 🤭</p>
+          
+          <div className="linktree-socials">
+            <a href="https://twitter.com/goddessmikky23" target="_blank" rel="noopener noreferrer" className="linktree-social-link">
+              <X size={24} color="white" />
+            </a>
+          </div>
+        </div>
 
-            <textarea
-              id="tribute-message"
-              name="tributeMessage"
-              className="wishlist__tribute-message"
-              placeholder="Optional message for your Goddess..."
-              rows={3}
-              value={tributeMessage}
-              onChange={(e) => setTributeMessage(e.target.value)}
-            />
+        <div className="linktree-links">
+          {links.map((link) => (
+            <a key={link.id} href={link.url} target="_blank" rel="noopener noreferrer" className="linktree-link-card">
+              {link.hasAvatar ? (
+                <img src={mikkyImage} alt="Icon" className="linktree-link-avatar" />
+              ) : (
+                <div className="linktree-link-placeholder"></div>
+              )}
+              <span className="linktree-link-text">{link.title}</span>
+              <div className="linktree-link-more">
+                <MoreHorizontal size={18} color="white" />
+              </div>
+            </a>
+          ))}
+        </div>
 
-            <button
-              type="submit"
-              className="wishlist__tribute-btn"
-              id="tribute-submit-btn"
-            >
-              Submit Payment
-            </button>
-          </form>
-        )}
-      </section>
+        <div className="linktree-footer">
+          <a href="#" className="linktree-join-btn">
+            Join goddessmikky23 on Linktree
+          </a>
+        </div>
+      </div>
     </div>
   );
 }

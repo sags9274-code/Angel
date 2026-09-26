@@ -8,6 +8,7 @@ import WallOfShame from './components/WallOfShame';
 import FreeTasks from './components/FreeTasks';
 import RedemptionStore from './components/RedemptionStore';
 import Login from './components/Login';
+import Profile from './components/Profile';
 import ProtectedRoute from './components/ProtectedRoute';
 import { AuthProvider } from './context/AuthContext';
 
@@ -29,6 +30,7 @@ function App() {
             <Route path="/wall-of-shame" element={<WallOfShame />} />
             <Route path="/free-tasks" element={<FreeTasks />} />
             <Route path="/store" element={<RedemptionStore />} />
+            <Route path="/profile" element={<Profile />} />
           </Route>
         </Routes>
       </div>

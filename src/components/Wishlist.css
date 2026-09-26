@@ -1,0 +1,176 @@
+.linktree-container {
+  min-height: 100vh;
+  width: 100%;
+  background-color: #6a3b7d; /* Purple base */
+  background: radial-gradient(circle at center, #7f5195 0%, #562867 100%);
+  position: relative;
+  display: flex;
+  justify-content: center;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  overflow-x: hidden;
+  padding-top: 60px; /* Space for hidden navbar if any, or just top padding */
+}
+
+.linktree-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.linktree-content {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 580px;
+  padding: 40px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.linktree-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 32px;
+  text-align: center;
+}
+
+.linktree-avatar-wrapper {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin-bottom: 16px;
+  border: 2px solid transparent;
+}
+
+.linktree-avatar {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.linktree-title {
+  color: #ffffff;
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0 0 4px 0;
+  letter-spacing: -0.5px;
+}
+
+.linktree-subtitle {
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 500;
+  margin: 0 0 16px 0;
+}
+
+.linktree-socials {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 8px;
+}
+
+.linktree-social-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  transition: transform 0.2s ease;
+}
+
+.linktree-social-link:hover {
+  transform: scale(1.1);
+}
+
+.linktree-links {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 48px;
+}
+
+.linktree-link-card {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 12px;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 30px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  min-height: 58px;
+}
+
+.linktree-link-card:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: scale(1.02);
+}
+
+.linktree-link-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.linktree-link-placeholder {
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+}
+
+.linktree-link-text {
+  flex-grow: 1;
+  text-align: center;
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 600;
+  padding: 0 12px;
+}
+
+.linktree-link-more {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  opacity: 0.8;
+}
+
+.linktree-link-card:hover .linktree-link-more {
+  opacity: 1;
+}
+
+.linktree-footer {
+  margin-top: auto;
+  padding-bottom: 24px;
+}
+
+.linktree-join-btn {
+  display: inline-flex;
+  align-items: center;
+  background: #ffffff;
+  color: #000000;
+  padding: 12px 24px;
+  border-radius: 24px;
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: transform 0.2s ease;
+}
+
+.linktree-join-btn:hover {
+  transform: scale(1.05);
+}

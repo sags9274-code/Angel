@@ -29,7 +29,7 @@ body {
   );
   background-size: 200% auto;
   animation: heartbeat-pulse 3s infinite ease-in-out, shimmer-sweep 4s infinite linear;
-  box-shadow: 0 0 15px rgba(212, 168, 67, 0.3);
+  box-shadow: 0 0 15px rgba(255, 51, 133, 0.3);
 }
 
 .hero__cta-primary:hover,
@@ -41,7 +41,7 @@ body {
   background-size: 200% auto;
   animation: shimmer-sweep 2s infinite linear; /* Faster shimmer on hover */
   transform: translateY(-3px) scale(1.02);
-  box-shadow: 0 12px 30px rgba(212, 168, 67, 0.5), 0 0 40px rgba(153, 0, 0, 0.4);
+  box-shadow: 0 12px 30px rgba(255, 51, 133, 0.5), 0 0 40px rgba(153, 0, 0, 0.4);
   color: #000;
   text-shadow: none;
 }
@@ -65,7 +65,7 @@ body {
 /* ----- PROFILE CARD LEVITATION ----- */
 .profile-card {
   animation: levitate 6s infinite ease-in-out;
-  border: 1px solid rgba(212, 168, 67, 0.2);
+  border: 1px solid rgba(255, 51, 133, 0.2);
 }
 
 .profile-card__badge {
@@ -108,7 +108,7 @@ body {
 }
 
 .navbar__logo-text {
-  text-shadow: 0 0 10px rgba(212, 168, 67, 0.3);
+  text-shadow: 0 0 10px rgba(255, 51, 133, 0.3);
 }
 
 /* Add a gold vignette to the hero to make it feel more luxurious */
@@ -125,10 +125,10 @@ body::after {
   width: 100vw;
   height: 100vh;
   background-image: 
-    radial-gradient(1px 1px at 20px 30px, rgba(212,168,67,0.3), transparent),
-    radial-gradient(1px 1px at 40px 70px, rgba(212,168,67,0.3), transparent),
-    radial-gradient(2px 2px at 90px 40px, rgba(212,168,67,0.4), transparent),
-    radial-gradient(1.5px 1.5px at 160px 120px, rgba(212,168,67,0.2), transparent);
+    radial-gradient(1px 1px at 20px 30px, rgba(255,51,133,0.3), transparent),
+    radial-gradient(1px 1px at 40px 70px, rgba(255,51,133,0.3), transparent),
+    radial-gradient(2px 2px at 90px 40px, rgba(255,51,133,0.4), transparent),
+    radial-gradient(1.5px 1.5px at 160px 120px, rgba(255,51,133,0.2), transparent);
   background-size: 200px 200px;
   z-index: -1;
   opacity: 0.6;

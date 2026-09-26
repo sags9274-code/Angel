@@ -13,10 +13,10 @@
   --color-bg-secondary: #111111;
   --color-bg-card: rgba(20, 20, 20, 0.85);
   --color-bg-card-border: rgba(255, 255, 255, 0.08);
-  --color-gold: #d4a843;
-  --color-gold-hover: #e6bc5a;
-  --color-gold-dark: #b8922f;
-  --color-gold-muted: rgba(212, 168, 67, 0.15);
+  --color-gold: #ff3385;
+  --color-gold-hover: #ff66a3;
+  --color-gold-dark: #cc0052;
+  --color-gold-muted: rgba(255, 51, 133, 0.15);
   --color-text-primary: #ffffff;
   --color-text-secondary: rgba(255, 255, 255, 0.7);
   --color-text-muted: rgba(255, 255, 255, 0.45);
@@ -56,7 +56,7 @@
   --duration-slow: 500ms;
 
   /* Shadows */
-  --shadow-glow: 0 0 30px rgba(212, 168, 67, 0.15);
+  --shadow-glow: 0 0 30px rgba(255, 51, 133, 0.15);
   --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.4);
   --shadow-elevated: 0 20px 60px rgba(0, 0, 0, 0.5);
 }
@@ -110,19 +110,19 @@ ul, ol {
   background: var(--color-bg-primary);
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(212, 168, 67, 0.3);
+  background: rgba(255, 51, 133, 0.3);
   border-radius: var(--radius-full);
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(212, 168, 67, 0.5);
+  background: rgba(255, 51, 133, 0.5);
 }
 
 /* ===== GLOBAL ANIMATIONS ===== */
 @keyframes heartbeat-pulse {
-  0% { transform: scale(1); box-shadow: 0 0 10px rgba(212, 168, 67, 0.2); }
-  15% { transform: scale(1.03); box-shadow: 0 0 25px rgba(212, 168, 67, 0.5); }
-  30% { transform: scale(1); box-shadow: 0 0 10px rgba(212, 168, 67, 0.2); }
-  100% { transform: scale(1); box-shadow: 0 0 10px rgba(212, 168, 67, 0.2); }
+  0% { transform: scale(1); box-shadow: 0 0 10px rgba(255, 51, 133, 0.2); }
+  15% { transform: scale(1.03); box-shadow: 0 0 25px rgba(255, 51, 133, 0.5); }
+  30% { transform: scale(1); box-shadow: 0 0 10px rgba(255, 51, 133, 0.2); }
+  100% { transform: scale(1); box-shadow: 0 0 10px rgba(255, 51, 133, 0.2); }
 }
 
 @keyframes shimmer-sweep {
@@ -137,8 +137,8 @@ ul, ol {
 }
 
 @keyframes hypnotic-glow {
-  0%, 100% { filter: drop-shadow(0 0 8px rgba(212, 168, 67, 0.3)); }
-  50% { filter: drop-shadow(0 0 25px rgba(212, 168, 67, 0.7)); }
+  0%, 100% { filter: drop-shadow(0 0 8px rgba(255, 51, 133, 0.3)); }
+  50% { filter: drop-shadow(0 0 25px rgba(255, 51, 133, 0.7)); }
 }
 
 @keyframes float-up-fade {
