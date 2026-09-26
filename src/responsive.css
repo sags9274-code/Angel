@@ -23,6 +23,8 @@
   }
   .hero__right {
     order: -1;
+    display: flex;
+    justify-content: center;
   }
   .hero__stats {
     justify-content: center;
@@ -34,10 +36,10 @@
 
   /* Navbar */
   .navbar__links {
-    display: none;
+    display: none !important;
   }
   .navbar__toggle {
-    display: flex;
+    display: flex !important;
   }
 
   /* Wall of Shame Gallery */
@@ -45,7 +47,10 @@
     columns: 2;
   }
 
-  /* Profile Card removed hardcoded width */
+  /* Hero Profile Card */
+  .profile-card {
+    width: 280px;
+  }
 }
 
 /* ----- MOBILE DEVICES (< 768px) ----- */
@@ -69,6 +74,7 @@
   /* Hero Section */
   .hero {
     padding: 90px var(--space-lg) var(--space-2xl);
+    min-height: auto;
   }
   .hero__heading-line1,
   .hero__heading-line2 {
@@ -84,6 +90,14 @@
   .hero__cta-secondary {
     justify-content: center;
     width: 100%;
+  }
+
+  /* Hero Profile Card */
+  .profile-card {
+    width: 240px;
+  }
+  .profile-card:hover {
+    transform: none;
   }
 
   /* Forms & Inputs */
@@ -145,17 +159,24 @@
   }
   .hero__heading-line1,
   .hero__heading-line2 {
-    font-size: 2.2rem;
+    font-size: 2rem;
   }
   .hero__stats {
     flex-direction: column;
     gap: var(--space-md);
     align-items: center;
   }
-  
-  /* Profile Card Name */
+
+  /* Hero Profile Card */
+  .profile-card {
+    width: 200px;
+  }
   .profile-card__name {
     font-size: 1.2rem;
+  }
+  .profile-card__badge {
+    font-size: 0.5rem;
+    padding: 4px 10px;
   }
 
   /* Free Tasks */
