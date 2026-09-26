@@ -1,4 +1,4 @@
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import './App.css';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
@@ -12,10 +12,13 @@ import ProtectedRoute from './components/ProtectedRoute';
 import { AuthProvider } from './context/AuthContext';
 
 function App() {
+  const location = useLocation();
+  const isLoginPage = location.pathname === '/login';
+
   return (
     <AuthProvider>
       <div className="app">
-        <Navbar />
+        {!isLoginPage && <Navbar />}
         <Routes>
           <Route path="/" element={<Hero />} />
           <Route path="/login" element={<Login />} />
