@@ -224,7 +224,7 @@ export default function Profile() {
               </form>
             ) : (
               <div className="profile-username-display">
-                <h2 className="profile-username">@{username || 'Loading...'}</h2>
+                <h2 className="profile-username">@{username || 'Set_Username'}</h2>
                 <button className="profile-edit-icon" onClick={() => setIsEditingUsername(true)} title="Edit Username">
                   ✏️
                 </button>
