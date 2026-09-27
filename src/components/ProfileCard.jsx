@@ -2,7 +2,7 @@ import profileImage from '../assets/angel-profile.jpeg';
 
 export default function ProfileCard() {
   return (
-    <div className="profile-card" id="profile-card">
+    <div className="profile-card premium-frame" id="profile-card">
       {/* Top Badge */}
       <span className="profile-card__badge">Supreme Owner</span>
 
