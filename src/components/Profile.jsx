@@ -37,10 +37,9 @@ export default function Profile() {
         .select(`
           badges (
             id,
-            name,
+            title,
             description,
-            icon,
-            rarity
+            icon
           )
         `)
         .eq('user_id', userId);
@@ -268,9 +267,9 @@ export default function Profile() {
           ) : (
             <div className="profile-badges-grid">
               {badges.map((badge, idx) => (
-                <div key={idx} className={`profile-badge-card rarity--${badge.rarity}`}>
+                <div key={idx} className="profile-badge-card">
                   <div className="profile-badge-icon">{badge.icon}</div>
-                  <div className="profile-badge-name">{badge.name}</div>
+                  <div className="profile-badge-name">{badge.title}</div>
                   <div className="profile-badge-desc">{badge.description}</div>
                 </div>
               ))}
