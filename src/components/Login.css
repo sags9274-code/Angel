@@ -37,7 +37,7 @@
 .login-container {
   position: relative;
   z-index: 10;
-  background: rgba(15, 15, 15, 0.6);
+  background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
   border: 1px solid rgba(255, 51, 133, 0.15);
@@ -45,7 +45,7 @@
   padding: 48px;
   width: 100%;
   max-width: 440px;
-  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  box-shadow: 0 25px 60px rgba(236, 72, 153, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.1);
   animation: float-up-fade 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
@@ -98,7 +98,7 @@
 }
 
 .login-input {
-  background: rgba(0, 0, 0, 0.4);
+  background: rgba(236, 72, 153, 0.4);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 12px;
   padding: 16px 20px;
@@ -113,7 +113,7 @@
 .login-input:focus {
   outline: none;
   border-color: var(--color-gold);
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(236, 72, 153, 0.6);
   box-shadow: 0 0 20px rgba(255, 51, 133, 0.15);
 }
 
@@ -124,7 +124,7 @@
 
 .login-submit-btn {
   background: var(--color-gold);
-  color: #000;
+  color: #fce7f3;
   border: none;
   border-radius: 12px;
   padding: 18px;
