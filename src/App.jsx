@@ -9,6 +9,7 @@ import FreeTasks from './components/FreeTasks';
 import RedemptionStore from './components/RedemptionStore';
 import Login from './components/Login';
 import Profile from './components/Profile';
+import Dashboard from './components/Dashboard';
 import ProtectedRoute from './components/ProtectedRoute';
 import { AuthProvider } from './context/AuthContext';
 
@@ -31,6 +32,7 @@ function App() {
             <Route path="/free-tasks" element={<FreeTasks />} />
             <Route path="/store" element={<RedemptionStore />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/dashboard" element={<Dashboard />} />
           </Route>
         </Routes>
       </div>
