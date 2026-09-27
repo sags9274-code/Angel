@@ -2094,3 +2094,35 @@
 .dashboard-table tr:hover td {
   background: rgba(212, 168, 67, 0.05);
 }
+
+/* Premium Frame Styles */
+.premium-frame {
+  position: relative;
+  background: var(--color-bg-card);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.premium-frame::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  border-radius: var(--radius-lg);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  pointer-events: none;
+  z-index: 10;
+}
+
+.premium-frame:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2), 0 0 15px var(--color-primary-hover);
+  border-color: var(--color-primary);
+}
+
+.wall__like-btn {
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}

@@ -256,17 +256,15 @@ export default function RedemptionStore() {
             return (
               <div
                 key={badge.id}
+                className="premium-frame"
                 style={{
                   background: isOwned ? 'rgba(212,168,67,0.1)' : 'var(--color-bg-card)',
                   border: isOwned ? '1px solid var(--color-gold)' : '1px solid var(--color-border)',
-                  borderRadius: 'var(--radius-lg)',
                   padding: '2rem 1.5rem',
                   display: 'flex',
                   flexDirection: 'column',
                   alignItems: 'center',
                   textAlign: 'center',
-                  position: 'relative',
-                  overflow: 'hidden'
                 }}
               >
                 {isOwned && (

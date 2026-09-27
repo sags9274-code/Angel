@@ -24,9 +24,11 @@ export default function WallOfShame() {
   const [isNsfw, setIsNsfw] = useState(false);
   const [unblurredItems, setUnblurredItems] = useState(new Set());
   
-  // Comments state
+  // Comments & Likes state
   const [comments, setComments] = useState({});
   const [newComment, setNewComment] = useState({});
+  const [likes, setLikes] = useState({});
+  const [sortMode, setSortMode] = useState('newest');
 
   const { role, user } = useAuth();
   const canEdit = role === 'goddess' || role === 'developer';
@@ -35,7 +37,7 @@ export default function WallOfShame() {
 
   useEffect(() => {
     fetchWallOfShame();
-  }, []);
+  }, [user]);
 
   const fetchWallOfShame = async () => {
     setLoading(true);
@@ -88,6 +90,28 @@ export default function WallOfShame() {
         });
         
         setComments(grouped);
+      }
+
+      // Fetch Likes
+      const { data: likesData, error: likesError } = await supabase
+        .from('wall_likes')
+        .select('image_id, user_id')
+        .in('image_id', postIds);
+
+      if (likesError) {
+        console.error('Error fetching likes:', likesError);
+      } else {
+        const likesMap = {};
+        postIds.forEach(id => likesMap[id] = { count: 0, userLiked: false });
+        likesData?.forEach(like => {
+          if (likesMap[like.image_id]) {
+            likesMap[like.image_id].count += 1;
+            if (user && like.user_id === user.id) {
+              likesMap[like.image_id].userLiked = true;
+            }
+          }
+        });
+        setLikes(likesMap);
       }
     }
     setLoading(false);
@@ -254,6 +278,37 @@ export default function WallOfShame() {
     }
   };
 
+  const handleToggleLike = async (shameId) => {
+    if (!user) {
+      alert("Please sign in to like this post.");
+      return;
+    }
+    
+    const isLiked = likes[shameId]?.userLiked;
+    
+    // Optimistic UI update
+    setLikes(prev => ({
+      ...prev,
+      [shameId]: {
+        count: (prev[shameId]?.count || 0) + (isLiked ? -1 : 1),
+        userLiked: !isLiked
+      }
+    }));
+    
+    if (isLiked) {
+      const { error } = await supabase
+        .from('wall_likes')
+        .delete()
+        .match({ image_id: shameId, user_id: user.id });
+      if (error) console.error("Error unliking:", error);
+    } else {
+      const { error } = await supabase
+        .from('wall_likes')
+        .insert([{ image_id: shameId, user_id: user.id }]);
+      if (error) console.error("Error liking:", error);
+    }
+  };
+
   const toggleUnblur = (id) => {
     setUnblurredItems(prev => {
       const next = new Set(prev);
@@ -315,6 +370,26 @@ export default function WallOfShame() {
             The fallen. The failures. Displayed for all to see.
           </p>
         </header>
+
+        <div className="wall__controls-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+          <div className="wall__sort-control">
+            <label htmlFor="sortMode" style={{ color: 'var(--color-text-secondary)', marginRight: '10px', fontWeight: '600' }}>Sort by:</label>
+            <select 
+              id="sortMode" 
+              value={sortMode} 
+              onChange={(e) => setSortMode(e.target.value)}
+              style={{
+                padding: '8px 12px', borderRadius: 'var(--radius-full)', 
+                background: 'var(--color-bg-card)', color: 'var(--color-text-primary)',
+                border: '1px solid var(--color-border)', outline: 'none',
+                cursor: 'pointer', fontWeight: 'bold'
+              }}
+            >
+              <option value="newest">Newest First</option>
+              <option value="most_liked">Most Liked</option>
+            </select>
+          </div>
+        </div>
 
         {canEdit && (
           <div className="wall__admin-controls">
@@ -424,8 +499,15 @@ export default function WallOfShame() {
             <p style={{textAlign: 'center', color: 'var(--color-text-secondary)'}}>No offenders found yet. The wall is clean.</p>
           ) : (
             <div className="wall__gallery" id="wall-gallery">
-              {images.map((item) => (
-                <article key={item.id} className="wall__card">
+              {[...images].sort((a, b) => {
+                if (sortMode === 'most_liked') {
+                  const likesA = likes[a.id]?.count || 0;
+                  const likesB = likes[b.id]?.count || 0;
+                  return likesB - likesA;
+                }
+                return 0; // Already sorted by date from DB
+              }).map((item) => (
+                <article key={item.id} className="wall__card premium-frame">
                   <div className="wall__card-media-container" style={{ position: 'relative' }}>
                     {renderMedia(item.media_urls, item.image_url, item.is_nsfw, item.id)}
                     {item.is_nsfw && !unblurredItems.has(item.id) && (
@@ -448,10 +530,24 @@ export default function WallOfShame() {
                   
                   <div className="wall__card-body">
                     <p className="wall__card-caption">{item.caption}</p>
-                    <div className="wall__card-footer">
-                      <span className="wall__card-timestamp">
+                    <div className="wall__card-footer" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '15px' }}>
+                      <span className="wall__card-timestamp" style={{ fontSize: '0.85rem', color: 'var(--color-text-muted)' }}>
                         {new Date(item.created_at).toLocaleDateString()}
                       </span>
+                      <button 
+                        className={`wall__like-btn ${likes[item.id]?.userLiked ? 'liked' : ''}`}
+                        onClick={() => handleToggleLike(item.id)}
+                        style={{
+                          background: 'none', border: 'none', cursor: 'pointer',
+                          display: 'flex', alignItems: 'center', gap: '5px',
+                          color: likes[item.id]?.userLiked ? 'var(--color-primary)' : 'var(--color-text-muted)',
+                          fontWeight: 'bold', fontSize: '1rem', transition: 'transform 0.2s'
+                        }}
+                        onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.1)'}
+                        onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
+                      >
+                        {likes[item.id]?.userLiked ? '❤️' : '🤍'} {likes[item.id]?.count || 0}
+                      </button>
                     </div>
                   </div>
                   
