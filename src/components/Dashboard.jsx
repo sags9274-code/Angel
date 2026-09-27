@@ -58,7 +58,7 @@ export default function Dashboard() {
       profiles.forEach(p => {
         subsMap[p.id] = {
           id: p.id,
-          email: p.email || 'Unknown',
+          email: p.username || 'Unknown',
           joined: new Date(p.created_at).toLocaleDateString(),
           earned: 0,
           spent: 0,
@@ -138,7 +138,7 @@ export default function Dashboard() {
               <h2 style={{ color: 'var(--color-gold)', margin: 0 }}>Sub Roster</h2>
               <input 
                 type="text" 
-                placeholder="Search by email or ID..." 
+                placeholder="Search by username or ID..." 
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="wishlist__tribute-input"
@@ -150,7 +150,7 @@ export default function Dashboard() {
               <table className="dashboard-table">
                 <thead>
                   <tr>
-                    <th>Sub ID / Email</th>
+                    <th>Sub ID / Username</th>
                     <th>Joined Date</th>
                     <th>Tasks Completed</th>
                     <th>Points Earned</th>
