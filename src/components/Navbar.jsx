@@ -51,36 +51,23 @@ export default function Navbar() {
             <div className="navbar__logo-diamond" />
             <span className="navbar__logo-text">Goddess</span>
           </div>
-          <span className="navbar__logo-subtitle">Mikky&apos;s Domain</span>
+          <span className="navbar__logo-subtitle">Angel&apos;s Domain</span>
         </Link>
 
         {/* Desktop Links */}
         <div className="navbar__links">
           {NAV_LINKS.map((link) => (
-          <NavLink
-            key={link.label}
-            to={link.to}
-            end={link.to === '/'}
-            className={({ isActive }) =>
-              `navbar__mobile-link ${isActive ? 'navbar__mobile-link--active' : ''}`
-            }
-            onClick={() => setMobileOpen(false)}
-          >
-            {link.label}
-          </NavLink>
-        ))}
-        {isGoddessOrDev && (
-          <NavLink
-            to="/dashboard"
-            className={({ isActive }) =>
-              `navbar__mobile-link ${isActive ? 'navbar__mobile-link--active' : ''}`
-            }
-            style={{ color: 'var(--color-gold)' }}
-            onClick={() => setMobileOpen(false)}
-          >
-            Dashboard
-          </NavLink>
-        )}
+            <NavLink
+              key={link.label}
+              to={link.to}
+              end={link.to === '/'}
+              className={({ isActive }) =>
+                `navbar__link ${isActive ? 'navbar__link--active' : ''}`
+              }
+            >
+              {link.label}
+            </NavLink>
+          ))}
           {isGoddessOrDev && (
             <NavLink
               to="/dashboard"
