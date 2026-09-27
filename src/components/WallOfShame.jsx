@@ -21,6 +21,8 @@ export default function WallOfShame() {
   const [isDragging, setIsDragging] = useState(false);
   const [errorMsg, setErrorMsg] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [isNsfw, setIsNsfw] = useState(false);
+  const [unblurredItems, setUnblurredItems] = useState(new Set());
   
   // Comments state
   const [comments, setComments] = useState({});
@@ -170,6 +172,7 @@ export default function WallOfShame() {
     setPendingPreviews([]);
     setCaption('');
     setTag('Exposed');
+    setIsNsfw(false);
     setErrorMsg(null);
     setIsUploadOpen(false);
     if (fileInputRef.current) fileInputRef.current.value = '';
@@ -215,7 +218,8 @@ export default function WallOfShame() {
       .insert([{ 
         media_urls: uploadedUrls, 
         caption: finalCaption, 
-        tag: finalTag 
+        tag: finalTag,
+        is_nsfw: isNsfw
       }]);
       
     if (dbError) {
@@ -250,7 +254,16 @@ export default function WallOfShame() {
     }
   };
 
-  const renderMedia = (urls, fallbackUrl) => {
+  const toggleUnblur = (id) => {
+    setUnblurredItems(prev => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
+
+  const renderMedia = (urls, fallbackUrl, isNsfw, id) => {
     // Determine active URLs (new array format or legacy fallback)
     let activeUrls = [];
     if (urls && urls.length > 0) activeUrls = urls;
@@ -258,13 +271,16 @@ export default function WallOfShame() {
     
     if (activeUrls.length === 0) return null;
 
+    const isUnblurred = unblurredItems.has(id);
+    const mediaStyle = (isNsfw && !isUnblurred) ? { filter: 'blur(15px)', cursor: 'pointer' } : { cursor: 'pointer' };
+
     if (activeUrls.length === 1) {
       const url = activeUrls[0];
       const isVideo = url.match(/\.(mp4|webm|mov)(\?.*)?$/i);
       return isVideo ? (
-        <video src={url} controls className="wall__card-media-item" />
+        <video src={url} controls={isUnblurred || !isNsfw} style={mediaStyle} onClick={() => toggleUnblur(id)} className="wall__card-media-item" />
       ) : (
-        <img src={url} alt="Offender evidence" className="wall__card-media-item" loading="lazy" />
+        <img src={url} alt="Offender evidence" style={mediaStyle} onClick={() => toggleUnblur(id)} className="wall__card-media-item" loading="lazy" />
       );
     }
 
@@ -275,9 +291,9 @@ export default function WallOfShame() {
           return (
             <div key={i} className="wall__card-carousel-slide">
               {isVideo ? (
-                <video src={url} controls className="wall__card-media-item" />
+                <video src={url} controls={isUnblurred || !isNsfw} style={mediaStyle} onClick={() => toggleUnblur(id)} className="wall__card-media-item" />
               ) : (
-                <img src={url} alt={`Evidence ${i+1}`} className="wall__card-media-item" loading="lazy" />
+                <img src={url} alt={`Evidence ${i+1}`} style={mediaStyle} onClick={() => toggleUnblur(id)} className="wall__card-media-item" loading="lazy" />
               )}
             </div>
           );
@@ -370,6 +386,16 @@ export default function WallOfShame() {
                           value={tag}
                           onChange={(e) => setTag(e.target.value)}
                         />
+                        <div style={{ display: 'flex', alignItems: 'center', marginTop: '10px', gap: '8px' }}>
+                          <input 
+                            type="checkbox" 
+                            id="nsfw-checkbox" 
+                            checked={isNsfw} 
+                            onChange={(e) => setIsNsfw(e.target.checked)} 
+                            style={{ width: '16px', height: '16px' }}
+                          />
+                          <label htmlFor="nsfw-checkbox" style={{ color: 'var(--color-text-secondary)', fontSize: '0.9rem' }}>Mark as NSFW</label>
+                        </div>
                         <div className="upload-zone__action-row" style={{marginTop: '15px'}}>
                           <button type="button" className="upload-zone__submit-btn" onClick={handleAddToWall}>
                             <span className="upload-zone__submit-text">Post Offender</span>
@@ -400,8 +426,18 @@ export default function WallOfShame() {
             <div className="wall__gallery" id="wall-gallery">
               {images.map((item) => (
                 <article key={item.id} className="wall__card">
-                  <div className="wall__card-media-container">
-                    {renderMedia(item.media_urls, item.image_url)}
+                  <div className="wall__card-media-container" style={{ position: 'relative' }}>
+                    {renderMedia(item.media_urls, item.image_url, item.is_nsfw, item.id)}
+                    {item.is_nsfw && !unblurredItems.has(item.id) && (
+                      <div className="wall__nsfw-overlay" onClick={() => toggleUnblur(item.id)} style={{
+                        position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        background: 'rgba(0,0,0,0.3)', color: '#fff', fontWeight: 'bold',
+                        cursor: 'pointer', zIndex: 5, pointerEvents: 'none'
+                      }}>
+                        NSFW - Click to view
+                      </div>
+                    )}
                     <span className="wall__card-badge wall__card-badge--exposed">
                       {item.tag || 'Exposed'}
                     </span>
