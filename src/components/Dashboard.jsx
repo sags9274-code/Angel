@@ -58,7 +58,8 @@ export default function Dashboard() {
       profiles.forEach(p => {
         subsMap[p.id] = {
           id: p.id,
-          email: p.username || 'Unknown',
+          username: p.username || 'No Username',
+          email: p.email || '',
           joined: new Date(p.created_at).toLocaleDateString(),
           earned: 0,
           spent: 0,
@@ -99,7 +100,8 @@ export default function Dashboard() {
   };
 
   const filteredSubs = subs.filter(sub => 
-    sub.email.toLowerCase().includes(searchTerm.toLowerCase()) || 
+    (sub.email && sub.email.toLowerCase().includes(searchTerm.toLowerCase())) ||
+    (sub.username && sub.username.toLowerCase().includes(searchTerm.toLowerCase())) ||
     sub.id.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -150,7 +152,7 @@ export default function Dashboard() {
               <table className="dashboard-table">
                 <thead>
                   <tr>
-                    <th>Sub ID / Username</th>
+                    <th>Sub ID / User</th>
                     <th>Joined Date</th>
                     <th>Tasks Completed</th>
                     <th>Points Earned</th>
@@ -163,7 +165,8 @@ export default function Dashboard() {
                     filteredSubs.map(sub => (
                       <tr key={sub.id}>
                         <td>
-                          <div style={{ fontWeight: 'bold', color: 'var(--color-text-primary)' }}>{sub.email}</div>
+                          <div style={{ fontWeight: 'bold', color: 'var(--color-text-primary)' }}>{sub.username}</div>
+                          {sub.email && <div style={{ fontSize: '0.85rem', color: 'var(--color-text-secondary)' }}>{sub.email}</div>}
                           <div style={{ fontSize: '0.8rem', color: 'var(--color-text-muted)' }}>{sub.id.substring(0, 8)}...</div>
                         </td>
                         <td>{sub.joined}</td>
