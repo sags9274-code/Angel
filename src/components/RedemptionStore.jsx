@@ -88,7 +88,7 @@ export default function RedemptionStore() {
 
     if (error) {
       console.error('Error adding badge:', error);
-      alert('Error adding badge. Check console.');
+      alert(`Error adding badge: ${error.message}`);
     } else if (data) {
       setBadges([...badges, data].sort((a, b) => a.cost - b.cost));
       setNewBadgeTitle('');
