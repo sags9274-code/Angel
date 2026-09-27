@@ -16,7 +16,8 @@ export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
-  const { user, logout } = useAuth();
+  const { user, logout, role } = useAuth();
+  const isGoddessOrDev = role === 'goddess' || role === 'developer';
 
   const handleAuthAction = async () => {
     if (user) {
@@ -56,18 +57,41 @@ export default function Navbar() {
         {/* Desktop Links */}
         <div className="navbar__links">
           {NAV_LINKS.map((link) => (
+          <NavLink
+            key={link.label}
+            to={link.to}
+            end={link.to === '/'}
+            className={({ isActive }) =>
+              `navbar__mobile-link ${isActive ? 'navbar__mobile-link--active' : ''}`
+            }
+            onClick={() => setMobileOpen(false)}
+          >
+            {link.label}
+          </NavLink>
+        ))}
+        {isGoddessOrDev && (
+          <NavLink
+            to="/dashboard"
+            className={({ isActive }) =>
+              `navbar__mobile-link ${isActive ? 'navbar__mobile-link--active' : ''}`
+            }
+            style={{ color: 'var(--color-gold)' }}
+            onClick={() => setMobileOpen(false)}
+          >
+            Dashboard
+          </NavLink>
+        )}
+          {isGoddessOrDev && (
             <NavLink
-              key={link.label}
-              to={link.to}
-              end={link.to === '/'}
+              to="/dashboard"
               className={({ isActive }) =>
                 `navbar__link ${isActive ? 'navbar__link--active' : ''}`
               }
-              id={`nav-${link.label.toLowerCase().replace(/\s+/g, '-')}`}
+              style={{ color: 'var(--color-gold)', fontWeight: 'bold' }}
             >
-              {link.label}
+              Dashboard
             </NavLink>
-          ))}
+          )}
         </div>
 
         {/* Actions */}
