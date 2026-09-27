@@ -1732,3 +1732,99 @@
 .login-toggle-btn:hover {
   text-decoration: underline;
 }
+
+/* Comments Section for Wall of Shame */
+.wall__comments-section {
+  padding: 15px;
+  background: rgba(255, 255, 255, 0.5);
+  border-top: 1px solid var(--color-border);
+}
+
+.wall__comments-list {
+  max-height: 200px;
+  overflow-y: auto;
+  margin-bottom: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.wall__comment {
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 8px;
+  font-size: 0.9rem;
+}
+
+/* 👑 Goddess Comment Pin & Highlight */
+.wall__comment--goddess {
+  border: 1px solid var(--color-gold);
+  background: rgba(236, 72, 153, 0.1);
+  box-shadow: 0 0 10px rgba(236, 72, 153, 0.2);
+}
+
+.wall__comment--goddess .wall__comment-author {
+  color: var(--color-gold);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.wall__comment-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 5px;
+}
+
+.wall__comment-author {
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.wall__comment-date {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+
+.wall__comment-text {
+  color: var(--color-text-primary);
+  line-height: 1.4;
+}
+
+.wall__comment-empty {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  font-style: italic;
+}
+
+.wall__comment-input-row {
+  display: flex;
+  gap: 8px;
+}
+
+.wall__comment-input {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid var(--color-border);
+  padding: 8px 12px;
+  border-radius: 6px;
+  color: var(--color-text-primary);
+}
+.wall__comment-input:focus {
+  outline: none;
+  border-color: var(--color-gold);
+}
+
+.wall__comment-btn {
+  background: var(--color-gold);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+.wall__comment-btn:hover {
+  background: var(--color-gold-hover);
+}

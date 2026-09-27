@@ -1,75 +1,6 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
-
-// Pre-populated sample entries with dark gradient backgrounds and shame-related emojis
-const INITIAL_SHAME_ENTRIES = [
-  {
-    id: 'shame-1',
-    file: null,
-    preview: null,
-    caption: 'PayPig Pete - Sent $50 thinking he was special',
-    timestamp: '2 hours ago',
-    tag: 'Delusional',
-    emoji: '🤡',
-    gradient: 'linear-gradient(135deg, #2b0808 0%, #160404 60%, #0d0202 100%)',
-    minHeight: '220px',
-  },
-  {
-    id: 'shame-2',
-    file: null,
-    preview: null,
-    caption: 'Wallet Warrior - Begged for attention in DMs after 3 days of silence',
-    timestamp: '5 hours ago',
-    tag: 'Desperate',
-    emoji: '💸',
-    gradient: 'linear-gradient(135deg, #2a0c1a 0%, #17040d 60%, #0a0106 100%)',
-    minHeight: '260px',
-  },
-  {
-    id: 'shame-3',
-    file: null,
-    preview: null,
-    caption: 'Simp Supreme - Maxed out his credit card for a "good morning" text',
-    timestamp: 'Yesterday',
-    tag: 'Bankrupt',
-    emoji: '📉',
-    gradient: 'linear-gradient(135deg, #200926 0%, #120317 60%, #08010a 100%)',
-    minHeight: '200px',
-  },
-  {
-    id: 'shame-4',
-    file: null,
-    preview: null,
-    caption: 'DMs Desperado - Wrote a 14-paragraph apology essay for breathing her air',
-    timestamp: '2 days ago',
-    tag: 'Ignored Forever',
-    emoji: '📜',
-    gradient: 'linear-gradient(135deg, #280909 0%, #180303 60%, #0c0101 100%)',
-    minHeight: '280px',
-  },
-  {
-    id: 'shame-5',
-    file: null,
-    preview: null,
-    caption: 'Tribute Traitor - Pledged eternal devotion, then asked for a discount code',
-    timestamp: '3 days ago',
-    tag: 'The Audacity',
-    emoji: '🚫',
-    gradient: 'linear-gradient(135deg, #2c1107 0%, #190802 60%, #0c0301 100%)',
-    minHeight: '210px',
-  },
-  {
-    id: 'shame-6',
-    file: null,
-    preview: null,
-    caption: 'Silent Stalker - Watched every story 42 times without leaving a single tribute',
-    timestamp: '5 days ago',
-    tag: 'Blocked',
-    emoji: '👁️',
-    gradient: 'linear-gradient(135deg, #1b0922 0%, #100315 60%, #08010a 100%)',
-    minHeight: '240px',
-  },
-];
+import { supabase } from '../supabaseClient';
 
 const ACCEPTED_EXTENSIONS = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
 const ACCEPTED_MIME_TYPES = [
@@ -80,19 +11,94 @@ const ACCEPTED_MIME_TYPES = [
 ];
 
 export default function WallOfShame() {
-  const [images, setImages] = useState(INITIAL_SHAME_ENTRIES);
+  const [images, setImages] = useState([]);
   const [pendingFile, setPendingFile] = useState(null);
   const [pendingPreview, setPendingPreview] = useState(null);
   const [caption, setCaption] = useState('');
+  const [tag, setTag] = useState('Exposed');
   const [isDragging, setIsDragging] = useState(false);
   const [errorMsg, setErrorMsg] = useState(null);
+  const [loading, setLoading] = useState(true);
   
-  const { role } = useAuth();
+  // Comments state
+  const [comments, setComments] = useState({});
+  const [newComment, setNewComment] = useState({});
+
+  const { role, user } = useAuth();
   const canEdit = role === 'goddess' || role === 'developer';
 
   const fileInputRef = useRef(null);
 
-  // Validate and process the selected image file
+  useEffect(() => {
+    fetchWallOfShame();
+  }, []);
+
+  const fetchWallOfShame = async () => {
+    setLoading(true);
+    // Fetch posts
+    const { data: posts, error: postsError } = await supabase
+      .from('wall_of_shame')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (postsError) {
+      console.error('Error fetching wall of shame:', postsError);
+      setLoading(false);
+      return;
+    }
+    
+    setImages(posts || []);
+    
+    // Fetch comments for all posts
+    if (posts && posts.length > 0) {
+      const postIds = posts.map(p => p.id);
+      const { data: commentsData, error: commentsError } = await supabase
+        .from('shame_comments')
+        .select(`
+          id,
+          shame_id,
+          comment_text,
+          created_at,
+          user_id,
+          profiles (
+            role,
+            email
+          )
+        `)
+        .in('shame_id', postIds)
+        .order('created_at', { ascending: true });
+
+      if (commentsError) {
+        console.error('Error fetching comments:', commentsError);
+      } else {
+        const grouped = {};
+        postIds.forEach(id => grouped[id] = []);
+        commentsData?.forEach(c => {
+          grouped[c.shame_id].push({
+            id: c.id,
+            text: c.comment_text,
+            userId: c.user_id,
+            role: c.profiles?.role || 'sub',
+            email: c.profiles?.email?.split('@')[0] || 'Anonymous',
+            date: new Date(c.created_at).toLocaleDateString()
+          });
+        });
+        
+        // Sort so goddess comments are at the top
+        Object.keys(grouped).forEach(key => {
+          grouped[key].sort((a, b) => {
+            if (a.role === 'goddess' && b.role !== 'goddess') return -1;
+            if (b.role === 'goddess' && a.role !== 'goddess') return 1;
+            return 0;
+          });
+        });
+        
+        setComments(grouped);
+      }
+    }
+    setLoading(false);
+  };
+
   const processFile = (file) => {
     if (!file) return;
 
@@ -101,17 +107,13 @@ export default function WallOfShame() {
     const isExtValid = ACCEPTED_EXTENSIONS.includes(fileExt);
 
     if (!isMimeValid && !isExtValid) {
-      setErrorMsg(
-        'Unsupported file format. Please upload .jpg, .jpeg, .png, .gif, or .webp images only.'
-      );
+      setErrorMsg('Unsupported file format. Please upload .jpg, .jpeg, .png, .gif, or .webp images only.');
       return;
     }
 
-    // Clear previous errors
     setErrorMsg(null);
     setPendingFile(file);
 
-    // Generate preview using FileReader
     const reader = new FileReader();
     reader.onload = (e) => {
       setPendingPreview(e.target?.result);
@@ -122,7 +124,6 @@ export default function WallOfShame() {
     reader.readAsDataURL(file);
   };
 
-  // Drag and drop handlers with visual feedback
   const handleDragOver = (e) => {
     e.preventDefault();
     e.stopPropagation();
@@ -160,59 +161,92 @@ export default function WallOfShame() {
     }
   };
 
-  // Trigger file selection dialog
   const handleBrowseClick = () => {
-    if (fileInputRef.current) {
-      fileInputRef.current.click();
-    }
+    if (fileInputRef.current) fileInputRef.current.click();
   };
 
-  // Reset current pending upload
   const handleClearPending = () => {
     setPendingFile(null);
     setPendingPreview(null);
     setCaption('');
+    setTag('Exposed');
     setErrorMsg(null);
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
-    }
+    if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
-  // Finalize upload and add to wall
-  const handleAddToWall = (e) => {
+  const handleAddToWall = async (e) => {
     if (e) e.preventDefault();
 
-    if (!pendingPreview && !pendingFile) {
+    if (!pendingFile) {
       setErrorMsg('Please select or drop an image file first.');
       return;
     }
 
     const finalCaption = caption.trim() || 'Anonymous Offender - Caught in the act';
-    const newEntry = {
-      id: `shame-upload-${Date.now()}`,
-      file: pendingFile,
-      preview: pendingPreview,
-      caption: finalCaption,
-      timestamp: 'Just now',
-      tag: 'Newly Exposed',
-      emoji: '🥀',
-      minHeight: '240px',
-    };
-
-    setImages((prev) => [newEntry, ...prev]);
-
-    // Reset pending state
+    const finalTag = tag.trim() || 'Exposed';
+    
+    // Upload image to storage
+    const fileExt = pendingFile.name.split('.').pop();
+    const fileName = `${Date.now()}_${Math.random().toString(36).substring(2, 9)}.${fileExt}`;
+    
+    const { error: uploadError } = await supabase.storage
+      .from('shame_images')
+      .upload(fileName, pendingFile);
+      
+    if (uploadError) {
+      setErrorMsg('Failed to upload image: ' + uploadError.message);
+      return;
+    }
+    
+    // Get public URL
+    const { data: urlData } = supabase.storage
+      .from('shame_images')
+      .getPublicUrl(fileName);
+      
+    // Insert into DB
+    const { error: dbError } = await supabase
+      .from('wall_of_shame')
+      .insert([{ image_url: urlData.publicUrl, caption: finalCaption, tag: finalTag }]);
+      
+    if (dbError) {
+      setErrorMsg('Failed to save entry: ' + dbError.message);
+      return;
+    }
+    
     handleClearPending();
+    fetchWallOfShame();
   };
 
-  const handleRemoveFromWall = (id) => {
-    setImages((prev) => prev.filter((img) => img.id !== id));
+  const handleRemoveFromWall = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this offender?")) return;
+    
+    const { error } = await supabase.from('wall_of_shame').delete().eq('id', id);
+    if (error) {
+      alert("Failed to delete: " + error.message);
+    } else {
+      fetchWallOfShame();
+    }
+  };
+  
+  const handlePostComment = async (shameId) => {
+    const text = newComment[shameId]?.trim();
+    if (!text || !user) return;
+    
+    const { error } = await supabase
+      .from('shame_comments')
+      .insert([{ shame_id: shameId, user_id: user.id, comment_text: text }]);
+      
+    if (error) {
+      alert("Failed to post comment: " + error.message);
+    } else {
+      setNewComment({ ...newComment, [shameId]: '' });
+      fetchWallOfShame();
+    }
   };
 
   return (
     <div className="page wall-page" id="wall-of-shame-page">
       <div className="wall__container">
-        {/* Page Header */}
         <header className="page__header wall__header">
           <div className="wall__header-badge">
             <span className="wall__header-badge-dot" />
@@ -226,21 +260,17 @@ export default function WallOfShame() {
           </p>
         </header>
 
-        {/* Upload Zone */}
         {canEdit && (
         <section className="wall__upload-section" aria-label="Upload evidence">
           <div
             className={`upload-zone ${isDragging ? 'upload-zone--dragging' : ''} ${
               pendingPreview ? 'upload-zone--has-preview' : ''
             }`}
-            id="shame-upload-zone"
             onDragOver={handleDragOver}
             onDragEnter={handleDragEnter}
             onDragLeave={handleDragLeave}
             onDrop={handleDrop}
             onClick={!pendingPreview ? handleBrowseClick : undefined}
-            role="region"
-            aria-label="Evidence upload zone"
           >
             <input
               ref={fileInputRef}
@@ -248,120 +278,53 @@ export default function WallOfShame() {
               accept=".jpg,.jpeg,.png,.gif,.webp,image/jpeg,image/png,image/gif,image/webp"
               onChange={handleFileChange}
               className="upload-zone__input"
-              id="wall-file-input"
               style={{ display: 'none' }}
-              aria-label="Upload offender screenshot"
             />
 
             {!pendingPreview ? (
               <div className="upload-zone__empty-state">
                 <div className="upload-zone__icon-container">
                   <span className="upload-zone__icon-glow" />
-                  <svg
-                    className="upload-zone__icon"
-                    viewBox="0 0 24 24"
-                    width="40"
-                    height="40"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                    <polyline points="17 8 12 3 7 8" />
-                    <line x1="12" y1="3" x2="12" y2="15" />
-                  </svg>
+                  <span style={{fontSize: '2rem'}}>📸</span>
                 </div>
-
                 <h3 className="upload-zone__headline">
                   {isDragging ? 'Drop Offender Evidence Here' : 'Drag & Drop Offender Evidence'}
                 </h3>
                 <p className="upload-zone__description">
-                  Drop screenshot here, or{' '}
-                  <span className="upload-zone__browse-btn">browse your files</span>
+                  Drop screenshot here, or <span className="upload-zone__browse-btn">browse your files</span>
                 </p>
-                <div className="upload-zone__badges">
-                  <span className="upload-zone__badge">.JPG</span>
-                  <span className="upload-zone__badge">.JPEG</span>
-                  <span className="upload-zone__badge">.PNG</span>
-                  <span className="upload-zone__badge">.GIF</span>
-                  <span className="upload-zone__badge">.WEBP</span>
-                </div>
               </div>
             ) : (
-              <div
-                className="upload-zone__active-state"
-                onClick={(e) => e.stopPropagation()}
-              >
-                {/* Preview Thumbnail */}
+              <div className="upload-zone__active-state" onClick={(e) => e.stopPropagation()}>
                 <div className="upload-zone__preview-col">
                   <div className="upload-zone__thumb-frame">
-                    <img
-                      src={pendingPreview}
-                      alt="Uploaded offender preview"
-                      className="upload-zone__thumb-img"
-                    />
-                    <button
-                      type="button"
-                      className="upload-zone__remove-thumb"
-                      onClick={handleClearPending}
-                      aria-label="Remove image"
-                      title="Remove image"
-                    >
-                      &times;
-                    </button>
-                    <span className="upload-zone__thumb-tag">Evidence Ready</span>
+                    <img src={pendingPreview} alt="Preview" className="upload-zone__thumb-img" />
+                    <button type="button" className="upload-zone__remove-thumb" onClick={handleClearPending}>&times;</button>
                   </div>
-                  {pendingFile && (
-                    <div className="upload-zone__thumb-meta">
-                      <span className="upload-zone__thumb-name">{pendingFile.name}</span>
-                      <span className="upload-zone__thumb-size">
-                        {(pendingFile.size / 1024).toFixed(1)} KB
-                      </span>
-                    </div>
-                  )}
                 </div>
 
-                {/* Caption Input & Action */}
                 <div className="upload-zone__form-col">
-                  <label htmlFor="shame-caption-input" className="upload-zone__form-label">
-                    Add Offender Caption &amp; Name
-                  </label>
+                  <label className="upload-zone__form-label">Add Offender Caption & Name</label>
                   <input
                     type="text"
-                    id="shame-caption-input"
                     className="upload-zone__caption-input"
-                    placeholder="e.g., PayPig Pete - Sent $50 thinking he was special"
+                    placeholder="e.g., PayPig Pete - Sent $50..."
                     value={caption}
                     onChange={(e) => setCaption(e.target.value)}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter') {
-                        e.preventDefault();
-                        handleAddToWall();
-                      }
-                    }}
-                    autoFocus
+                    style={{marginBottom: '10px'}}
                   />
-                  <p className="upload-zone__caption-hint">
-                    State their name and offense clearly for the eternal record.
-                  </p>
-
-                  <div className="upload-zone__action-row">
-                    <button
-                      type="button"
-                      className="upload-zone__submit-btn"
-                      id="add-to-wall-btn"
-                      onClick={handleAddToWall}
-                    >
+                  <input
+                    type="text"
+                    className="upload-zone__caption-input"
+                    placeholder="Tag (e.g., Exposed, Bankrupt)"
+                    value={tag}
+                    onChange={(e) => setTag(e.target.value)}
+                  />
+                  <div className="upload-zone__action-row" style={{marginTop: '15px'}}>
+                    <button type="button" className="upload-zone__submit-btn" onClick={handleAddToWall}>
                       <span className="upload-zone__submit-text">Add to Wall</span>
-                      <span className="upload-zone__submit-icon">⚡</span>
                     </button>
-                    <button
-                      type="button"
-                      className="upload-zone__cancel-btn"
-                      onClick={handleClearPending}
-                    >
+                    <button type="button" className="upload-zone__cancel-btn" onClick={handleClearPending}>
                       Discard
                     </button>
                   </div>
@@ -370,41 +333,26 @@ export default function WallOfShame() {
             )}
 
             {errorMsg && (
-              <div className="upload-zone__error-banner" role="alert">
-                <span className="upload-zone__error-icon">⚠️</span>
-                <span>{errorMsg}</span>
+              <div className="upload-zone__error-banner">
+                <span>⚠️ {errorMsg}</span>
               </div>
             )}
           </div>
         </section>
         )}
 
-        {/* Gallery Section */}
-        <section className="wall__gallery-section" aria-label="Wall of Shame Gallery">
-          <div className="wall__gallery-bar">
-            <div className="wall__gallery-stats">
-              <span className="wall__stat-count">{images.length}</span>
-              <span className="wall__stat-label">Offenders Displayed</span>
-            </div>
-            <div className="wall__gallery-pill">
-              <span className="wall__pill-dot" />
-              <span>Permanent Public Record</span>
-            </div>
-          </div>
-
-          {/* Masonry Columns Gallery */}
-          <div className="wall__gallery" id="wall-gallery">
-            {images.map((item) => (
-              <article
-                key={item.id}
-                className="wall__card"
-                id={`shame-card-${item.id}`}
-              >
-                {/* Image or Dark Gradient Placeholder */}
-                {item.preview ? (
+        <section className="wall__gallery-section">
+          {loading ? (
+            <p style={{textAlign: 'center', color: 'var(--color-text-secondary)'}}>Loading offenders...</p>
+          ) : images.length === 0 ? (
+            <p style={{textAlign: 'center', color: 'var(--color-text-secondary)'}}>No offenders found yet. The wall is clean.</p>
+          ) : (
+            <div className="wall__gallery" id="wall-gallery">
+              {images.map((item) => (
+                <article key={item.id} className="wall__card">
                   <div className="wall__card-media">
                     <img
-                      src={item.preview}
+                      src={item.image_url}
                       alt={item.caption}
                       className="wall__card-img"
                       loading="lazy"
@@ -414,57 +362,61 @@ export default function WallOfShame() {
                       {item.tag || 'Exposed'}
                     </span>
                     {canEdit && (
-                      <button className="wall__card-delete" onClick={() => handleRemoveFromWall(item.id)} title="Remove Offender">×</button>
+                      <button className="wall__card-delete" onClick={() => handleRemoveFromWall(item.id)}>×</button>
                     )}
                   </div>
-                ) : (
-                  <div
-                    className="wall__card-placeholder"
-                    style={{
-                      background: item.gradient || 'linear-gradient(135deg, #2b0808 0%, #150303 60%, #0a0101 100%)',
-                      minHeight: item.minHeight || '220px',
-                    }}
-                  >
-                    <div className="wall__placeholder-overlay" />
-                    <span className="wall__placeholder-emoji" role="img" aria-label="Shame icon">
-                      {item.emoji || '💀'}
-                    </span>
-                    {item.tag && (
-                      <span className="wall__card-badge">{item.tag}</span>
-                    )}
-                    {canEdit && (
-                      <button className="wall__card-delete" onClick={() => handleRemoveFromWall(item.id)} title="Remove Offender">×</button>
+                  
+                  <div className="wall__card-body">
+                    <p className="wall__card-caption">{item.caption}</p>
+                    <div className="wall__card-footer">
+                      <span className="wall__card-timestamp">
+                        {new Date(item.created_at).toLocaleDateString()}
+                      </span>
+                    </div>
+                  </div>
+                  
+                  {/* Comments Section */}
+                  <div className="wall__comments-section">
+                    <div className="wall__comments-list">
+                      {comments[item.id]?.length > 0 ? (
+                        comments[item.id].map(c => (
+                          <div key={c.id} className={`wall__comment ${c.role === 'goddess' ? 'wall__comment--goddess' : ''}`}>
+                            <div className="wall__comment-header">
+                              <span className="wall__comment-author">
+                                {c.role === 'goddess' ? '👑 Goddess' : c.email}
+                              </span>
+                              <span className="wall__comment-date">{c.date}</span>
+                            </div>
+                            <p className="wall__comment-text">{c.text}</p>
+                          </div>
+                        ))
+                      ) : (
+                        <p className="wall__comment-empty">No comments yet. Roast them!</p>
+                      )}
+                    </div>
+                    
+                    {user ? (
+                      <div className="wall__comment-input-row">
+                        <input
+                          type="text"
+                          placeholder="Laugh at them..."
+                          className="wall__comment-input"
+                          value={newComment[item.id] || ''}
+                          onChange={(e) => setNewComment({...newComment, [item.id]: e.target.value})}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter') handlePostComment(item.id);
+                          }}
+                        />
+                        <button className="wall__comment-btn" onClick={() => handlePostComment(item.id)}>Post</button>
+                      </div>
+                    ) : (
+                      <p className="wall__comment-empty" style={{textAlign:'center', marginTop: '10px'}}>Sign in to comment.</p>
                     )}
                   </div>
-                )}
-
-                {/* Card Content */}
-                <div className="wall__card-body">
-                  <p className="wall__card-caption">{item.caption}</p>
-                  <div className="wall__card-footer">
-                    <span className="wall__card-timestamp">
-                      <svg
-                        className="wall__card-clock-icon"
-                        viewBox="0 0 24 24"
-                        width="13"
-                        height="13"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      >
-                        <circle cx="12" cy="12" r="10" />
-                        <polyline points="12 6 12 12 16 14" />
-                      </svg>
-                      {item.timestamp}
-                    </span>
-                    <span className="wall__card-verdict">SHAMED</span>
-                  </div>
-                </div>
-              </article>
-            ))}
-          </div>
+                </article>
+              ))}
+            </div>
+          )}
         </section>
       </div>
     </div>
