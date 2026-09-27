@@ -68,36 +68,8 @@ const WISHLIST_ITEMS = [
 ];
 
 export default function Wishlist() {
-  const [tributeAmount, setTributeAmount] = useState('');
-  const [tributeMessage, setTributeMessage] = useState('');
-  const [submittedStatus, setSubmittedStatus] = useState(null);
-
-  const tributeRef = useRef(null);
-
   const handleSendGift = (item) => {
-    setTributeAmount(item.numericPrice.toString());
-    setTributeMessage(`Tribute offering for ${item.name} (${item.price})`);
-    setSubmittedStatus(null);
-
-    if (tributeRef.current) {
-      tributeRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-  };
-
-  const handleTributeSubmit = (e) => {
-    e.preventDefault();
-    if (!tributeAmount || Number(tributeAmount) <= 0) return;
-
-    setSubmittedStatus({
-      amount: tributeAmount,
-      message: tributeMessage,
-    });
-  };
-
-  const handleReset = () => {
-    setTributeAmount('');
-    setTributeMessage('');
-    setSubmittedStatus(null);
+    window.open('https://ouish.co/tribute', '_blank');
   };
 
   return (
@@ -166,88 +138,22 @@ export default function Wishlist() {
       <section
         className="wishlist__tribute"
         id="wishlist-tribute"
-        ref={tributeRef}
       >
         <h2 className="wishlist__tribute-title" id="tribute-title">
           Beg to Pay a Custom Amount
         </h2>
 
-        {submittedStatus ? (
-          <div
-            className="wishlist__tribute-success"
-            id="tribute-success"
+        <div style={{ textAlign: 'center', marginTop: '2rem' }}>
+          <a 
+            href="https://ouish.co/tribute" 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            className="wishlist__tribute-btn"
+            style={{ display: 'inline-block', textDecoration: 'none' }}
           >
-            <p className="wishlist__tribute-success-title">
-              Tribute Received
-            </p>
-            <p className="wishlist__tribute-success-text">
-              Your tribute of{' '}
-              <strong className="wishlist__tribute-success-amount">
-                ${Number(submittedStatus.amount).toLocaleString()}
-              </strong>{' '}
-              has been presented to your Goddess.
-            </p>
-            {submittedStatus.message && (
-              <p className="wishlist__tribute-success-note">
-                &ldquo;{submittedStatus.message}&rdquo;
-              </p>
-            )}
-            <button
-              type="button"
-              className="wishlist__tribute-btn"
-              id="tribute-reset-btn"
-              onClick={handleReset}
-            >
-              Send Another Tribute
-            </button>
-          </div>
-        ) : (
-          <form
-            className="wishlist__tribute-form"
-            id="tribute-form"
-            onSubmit={handleTributeSubmit}
-          >
-            <div className="wishlist__tribute-amount-wrapper">
-              <span
-                className="wishlist__tribute-currency"
-                id="tribute-currency-prefix"
-                aria-hidden="true"
-              >
-                $
-              </span>
-              <input
-                type="number"
-                id="tribute-amount"
-                name="tributeAmount"
-                className="wishlist__tribute-input"
-                placeholder="Amount"
-                min="1"
-                step="any"
-                value={tributeAmount}
-                onChange={(e) => setTributeAmount(e.target.value)}
-                required
-              />
-            </div>
-
-            <textarea
-              id="tribute-message"
-              name="tributeMessage"
-              className="wishlist__tribute-message"
-              placeholder="Optional message for your Goddess..."
-              rows={3}
-              value={tributeMessage}
-              onChange={(e) => setTributeMessage(e.target.value)}
-            />
-
-            <button
-              type="submit"
-              className="wishlist__tribute-btn"
-              id="tribute-submit-btn"
-            >
-              Submit Payment
-            </button>
-          </form>
-        )}
+            Submit Payment
+          </a>
+        </div>
       </section>
     </div>
   );
