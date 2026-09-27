@@ -1,4 +1,5 @@
-import heroBg from '../assets/hero-bg.png';
+import angelHero from '../assets/angel-hero.jpeg';
+import angelProfile from '../assets/angel-profile.jpeg';
 import ProfileCard from './ProfileCard';
 
 export default function Hero() {
@@ -7,7 +8,7 @@ export default function Hero() {
       {/* Background */}
       <div className="hero__bg">
         <img
-          src={heroBg}
+          src={angelHero}
           alt=""
           className="hero__bg-image"
           loading="eager"

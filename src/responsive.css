@@ -1,5 +1,5 @@
 /* ================================================================
-   RESPONSIVE UI OVERHAUL
+   RESPONSIVE UI OVERHAUL - Premium Mobile Experience
    ================================================================ */
 
 /* ----- TABLETS AND SMALL DESKTOPS (< 1024px) ----- */
@@ -51,6 +51,11 @@
   .profile-card {
     width: 280px;
   }
+
+  /* Dashboard */
+  .dashboard-stat-card h3 {
+    font-size: 0.9rem;
+  }
 }
 
 /* ----- MOBILE DEVICES (< 768px) ----- */
@@ -62,6 +67,10 @@
   .page__title {
     font-size: 2.5rem;
   }
+  .page__subtitle {
+    font-size: 0.95rem;
+    padding: 0 var(--space-sm);
+  }
 
   /* Navbar */
   .navbar {
@@ -69,6 +78,21 @@
   }
   .navbar__cta {
     display: none;
+  }
+
+  /* Mobile Menu - Beautiful slide down */
+  .navbar__mobile-menu {
+    backdrop-filter: blur(20px) saturate(180%);
+  }
+  .navbar__mobile-link {
+    font-size: 1.1rem;
+    padding: 14px 20px;
+    border-radius: var(--radius-md);
+    transition: background 0.2s ease;
+  }
+  .navbar__mobile-link:hover,
+  .navbar__mobile-link--active {
+    background: rgba(236, 72, 153, 0.1);
   }
 
   /* Hero Section */
@@ -80,6 +104,10 @@
   .hero__heading-line2 {
     font-size: 2.8rem;
   }
+  .hero__subtext {
+    font-size: 1rem;
+    padding: 0 var(--space-md);
+  }
   .hero__ctas {
     flex-direction: column;
     align-items: stretch;
@@ -90,6 +118,8 @@
   .hero__cta-secondary {
     justify-content: center;
     width: 100%;
+    padding: 14px 24px;
+    font-size: 0.95rem;
   }
 
   /* Hero Profile Card */
@@ -104,6 +134,9 @@
   .contracts__row {
     grid-template-columns: 1fr;
   }
+  .contracts__form {
+    padding: var(--space-lg);
+  }
 
   /* Wall of Shame */
   .wall__gallery {
@@ -116,6 +149,9 @@
   .wall__upload-submit {
     width: 100%;
     text-align: center;
+  }
+  .wall__card {
+    margin-bottom: var(--space-lg);
   }
 
   /* Free Tasks */
@@ -133,13 +169,51 @@
     min-width: 36px;
     font-size: 0.75rem;
   }
+  .tasks__stats-container {
+    flex-direction: column;
+    gap: var(--space-lg);
+  }
+  .tasks__points-card {
+    text-align: center;
+  }
 
   /* Login Page */
   .login-container {
     padding: var(--space-lg);
+    width: 92%;
   }
   .login-title {
     font-size: 1.6rem;
+  }
+
+  /* Profile Page */
+  .profile-card-container {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  /* Dashboard */
+  .dashboard-table-container {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .dashboard-table {
+    min-width: 600px;
+  }
+
+  /* Modal */
+  .modal-content {
+    width: 95%;
+    max-width: 95%;
+    margin: var(--space-lg);
+    max-height: 85vh;
+    overflow-y: auto;
+  }
+
+  /* Wishlist Cards Grid - 2 columns on tablet */
+  .wishlist__grid {
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: var(--space-md);
   }
 }
 
@@ -150,7 +224,11 @@
     padding: 80px var(--space-md) var(--space-xl);
   }
   .page__title {
-    font-size: 2rem;
+    font-size: 1.8rem;
+    line-height: 1.2;
+  }
+  .page__subtitle {
+    font-size: 0.85rem;
   }
 
   /* Hero Section */
@@ -159,20 +237,31 @@
   }
   .hero__heading-line1,
   .hero__heading-line2 {
-    font-size: 2rem;
+    font-size: 1.8rem;
+  }
+  .hero__badge {
+    font-size: 0.7rem;
+    padding: 6px 12px;
+  }
+  .hero__subtext {
+    font-size: 0.9rem;
   }
   .hero__stats {
     flex-direction: column;
     gap: var(--space-md);
     align-items: center;
   }
+  .hero__stat {
+    width: 100%;
+    text-align: center;
+  }
 
   /* Hero Profile Card */
   .profile-card {
-    width: 200px;
+    width: 180px;
   }
   .profile-card__name {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
   }
   .profile-card__badge {
     font-size: 0.5rem;
@@ -184,10 +273,17 @@
     flex-wrap: wrap;
     gap: var(--space-sm);
   }
+  .tasks__card-description {
+    font-size: 0.9rem;
+  }
 
   /* Wishlist */
+  .wishlist__grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-md);
+  }
   .wishlist__tribute-title {
-    font-size: 1.4rem;
+    font-size: 1.3rem;
   }
   .wishlist__tribute-input {
     font-size: 1.1rem;
@@ -196,5 +292,88 @@
   .wishlist__tribute-currency {
     font-size: 1.1rem;
     left: 14px;
+  }
+
+  /* Login */
+  .login-container {
+    width: 95%;
+    padding: var(--space-lg) var(--space-md);
+  }
+  .login-title {
+    font-size: 1.4rem;
+  }
+
+  /* Contracts */
+  .contracts__input,
+  .contracts__select,
+  .contracts__textarea {
+    font-size: 0.9rem;
+  }
+
+  /* Dashboard */
+  .dashboard-stat-card {
+    padding: var(--space-md);
+  }
+  .dashboard-stat-value {
+    font-size: 2rem;
+  }
+
+  /* Modal full screen on tiny screens */
+  .modal-content {
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    max-height: 90vh;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+  }
+
+  /* Ensure all touch targets are at least 44px */
+  button,
+  .navbar__mobile-link,
+  .tasks__card-checkbox,
+  input[type="checkbox"],
+  .navbar__toggle {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Reduce all card animations on mobile for performance */
+  .wishlist__card,
+  .wall__card,
+  .tasks__card,
+  .contracts__field {
+    animation-duration: 0.4s;
+  }
+}
+
+/* ----- VERY SMALL DEVICES (< 360px) ----- */
+@media (max-width: 360px) {
+  .page__title {
+    font-size: 1.5rem;
+  }
+  .hero__heading-line1,
+  .hero__heading-line2 {
+    font-size: 1.5rem;
+  }
+  .profile-card {
+    width: 160px;
+  }
+  .navbar__logo-text {
+    font-size: 1rem;
+  }
+  .navbar__logo-subtitle {
+    font-size: 0.55rem;
+  }
+}
+
+/* ----- REDUCED MOTION PREFERENCE ----- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }

@@ -1,11 +1,25 @@
 /* ================================================================
    FINDOM / FEMDOM THEME & ANIMATIONS OVERRIDE
+   Premium Animation Upgrade
    ================================================================ */
 
-
+/* ----- PAGE TRANSITIONS ----- */
+.page {
+  animation: slideInUp 0.6s var(--ease-out) both;
+}
 
 .page__title {
   animation: float-up-fade 1s var(--ease-out) both;
+  background: linear-gradient(135deg, var(--color-gold), var(--color-accent), var(--color-gold-dark));
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: float-up-fade 1s var(--ease-out) both, gradientShift 4s ease infinite;
+}
+
+.page__subtitle {
+  animation: float-up-fade 1s var(--ease-out) 0.2s both;
 }
 
 /* ----- BUTTON ANIMATIONS ----- */
@@ -15,7 +29,6 @@
 .wall__upload-submit,
 .contracts__submit,
 .login-submit-btn {
-  /* Shimmer setup */
   background: linear-gradient(
     110deg,
     var(--color-gold) 0%,
@@ -26,7 +39,9 @@
   );
   background-size: 200% auto;
   animation: heartbeat-pulse 3s infinite ease-in-out, shimmer-sweep 4s infinite linear;
-  box-shadow: 0 0 15px rgba(212, 168, 67, 0.3);
+  box-shadow: 0 0 15px rgba(236, 72, 153, 0.3);
+  position: relative;
+  overflow: hidden;
 }
 
 .hero__cta-primary:hover,
@@ -36,67 +51,159 @@
 .contracts__submit:hover,
 .login-submit-btn:hover {
   background-size: 200% auto;
-  animation: shimmer-sweep 2s infinite linear; /* Faster shimmer on hover */
+  animation: shimmer-sweep 2s infinite linear;
   transform: translateY(-3px) scale(1.02);
-  box-shadow: 0 12px 30px rgba(212, 168, 67, 0.5), 0 0 40px rgba(153, 0, 0, 0.4);
-  color: #000;
+  box-shadow: 0 12px 30px rgba(236, 72, 153, 0.5), 0 0 40px rgba(236, 72, 153, 0.3);
+  color: #fff;
   text-shadow: none;
 }
 
+.hero__cta-primary:active,
+.navbar__cta:active,
+.wishlist__tribute-btn:active,
+.wall__upload-submit:active,
+.contracts__submit:active,
+.login-submit-btn:active {
+  transform: translateY(0) scale(0.98);
+  transition: transform 0.1s ease;
+}
+
 /* Red accent on secondary / destructive actions */
+.hero__cta-secondary {
+  transition: all 0.3s var(--ease-out);
+}
 .hero__cta-secondary:hover {
   border-color: var(--color-accent);
   color: var(--color-accent);
-  background: rgba(153, 0, 0, 0.05);
-  box-shadow: 0 0 20px rgba(153, 0, 0, 0.3);
+  background: rgba(244, 63, 94, 0.05);
+  box-shadow: 0 0 20px rgba(244, 63, 94, 0.3);
+  transform: translateY(-3px);
 }
 
 .wall__card-delete {
   background: var(--color-accent);
+  transition: all 0.3s ease;
 }
 .wall__card-delete:hover {
   background: var(--color-accent-hover);
-  box-shadow: 0 0 15px rgba(153, 0, 0, 0.8);
+  box-shadow: 0 0 15px rgba(244, 63, 94, 0.8);
+  transform: scale(1.1);
 }
 
 /* ----- PROFILE CARD LEVITATION ----- */
 .profile-card {
   animation: levitate 6s infinite ease-in-out;
-  border: 1px solid rgba(212, 168, 67, 0.2);
+  border: 1px solid rgba(236, 72, 153, 0.2);
+  transition: all 0.5s var(--ease-out);
+}
+
+.profile-card:hover {
+  border-color: rgba(236, 72, 153, 0.4);
 }
 
 .profile-card__badge {
-  background: rgba(153, 0, 0, 0.8); /* Red accent badge */
-  border-color: var(--color-accent);
+  background: rgba(236, 72, 153, 0.9);
+  border-color: var(--color-gold);
   color: white;
   animation: heartbeat-pulse 2s infinite;
 }
 
-/* ----- STAGGERED ENTRANCES (Wishlist, Wall, Tasks) ----- */
+/* ----- STAGGERED ENTRANCES ----- */
 .wishlist__card,
 .wall__card,
 .tasks__card,
 .contracts__field {
-  animation: float-up-fade 0.8s var(--ease-out) both;
+  animation: scaleIn 0.6s var(--ease-out) both;
 }
 
-.wishlist__card:nth-child(1) { animation-delay: 0.1s; }
-.wishlist__card:nth-child(2) { animation-delay: 0.2s; }
-.wishlist__card:nth-child(3) { animation-delay: 0.3s; }
-.wishlist__card:nth-child(4) { animation-delay: 0.4s; }
-.wishlist__card:nth-child(n+5) { animation-delay: 0.5s; }
+.wishlist__card:nth-child(1),
+.wall__card:nth-child(1),
+.tasks__card:nth-child(1) { animation-delay: 0.05s; }
+.wishlist__card:nth-child(2),
+.wall__card:nth-child(2),
+.tasks__card:nth-child(2) { animation-delay: 0.1s; }
+.wishlist__card:nth-child(3),
+.wall__card:nth-child(3),
+.tasks__card:nth-child(3) { animation-delay: 0.15s; }
+.wishlist__card:nth-child(4),
+.wall__card:nth-child(4),
+.tasks__card:nth-child(4) { animation-delay: 0.2s; }
+.wishlist__card:nth-child(5),
+.wall__card:nth-child(5),
+.tasks__card:nth-child(5) { animation-delay: 0.25s; }
+.wishlist__card:nth-child(n+6),
+.wall__card:nth-child(n+6),
+.tasks__card:nth-child(n+6) { animation-delay: 0.3s; }
 
-.wall__card:nth-child(1) { animation-delay: 0.1s; }
-.wall__card:nth-child(2) { animation-delay: 0.2s; }
-.wall__card:nth-child(3) { animation-delay: 0.3s; }
-.wall__card:nth-child(4) { animation-delay: 0.4s; }
-.wall__card:nth-child(n+5) { animation-delay: 0.5s; }
+.contracts__field:nth-child(1) { animation-delay: 0.1s; }
+.contracts__field:nth-child(2) { animation-delay: 0.2s; }
 
-.tasks__card:nth-child(1) { animation-delay: 0.1s; }
-.tasks__card:nth-child(2) { animation-delay: 0.2s; }
-.tasks__card:nth-child(3) { animation-delay: 0.3s; }
-.tasks__card:nth-child(4) { animation-delay: 0.4s; }
-.tasks__card:nth-child(n+5) { animation-delay: 0.5s; }
+/* ----- CARD HOVER EFFECTS ----- */
+.wishlist__card {
+  transition: all 0.4s var(--ease-out);
+}
+.wishlist__card:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 20px 40px rgba(236, 72, 153, 0.2);
+}
+
+.wishlist__card:hover .wishlist__card-icon {
+  animation: wiggle 0.5s ease-in-out;
+}
+
+.tasks__card {
+  transition: all 0.3s var(--ease-out);
+}
+.tasks__card:hover {
+  transform: translateX(8px);
+  background: rgba(236, 72, 153, 0.03);
+  border-left: 3px solid var(--color-gold);
+}
+
+.wall__card {
+  transition: all 0.4s var(--ease-out);
+}
+.wall__card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+.wall__card:hover .wall__card-media-item {
+  transform: scale(1.03);
+  transition: transform 0.5s var(--ease-out);
+}
+
+/* ----- MODAL ANIMATIONS ----- */
+.modal-overlay {
+  animation: backdropFade 0.3s ease both;
+}
+
+.modal-content {
+  animation: modalEnter 0.4s var(--ease-out) both;
+}
+
+/* ----- PROGRESS BAR ANIMATION ----- */
+.tasks__progress-fill {
+  background-image: linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0.15) 25%,
+    transparent 25%,
+    transparent 50%,
+    rgba(255, 255, 255, 0.15) 50%,
+    rgba(255, 255, 255, 0.15) 75%,
+    transparent 75%,
+    transparent
+  );
+  background-size: 40px 40px;
+  animation: progressStripe 1s linear infinite;
+}
+
+/* ----- ERROR SHAKE ----- */
+.login-error,
+.contracts__error,
+.profile-status--error {
+  animation: shake 0.5s ease-in-out;
+}
 
 /* ----- HYPNOTIC LOGO / BRANDING ----- */
 .navbar__logo-diamond {
@@ -105,12 +212,97 @@
 }
 
 .navbar__logo-text {
-  text-shadow: 0 0 10px rgba(212, 168, 67, 0.3);
+  text-shadow: 0 0 10px rgba(236, 72, 153, 0.3);
 }
 
-/* Remove dark gold vignette for light theme */
+/* ----- MOBILE MENU UPGRADE ----- */
+.navbar__mobile-menu.open {
+  animation: slideDown 0.4s var(--ease-out) both;
+}
 
-/* Subtle gold dust particles in the background (using CSS pseudo-elements) */
+.navbar__mobile-menu.open .navbar__mobile-link:nth-child(1) { animation: slideInLeft 0.3s var(--ease-out) 0.05s both; }
+.navbar__mobile-menu.open .navbar__mobile-link:nth-child(2) { animation: slideInLeft 0.3s var(--ease-out) 0.1s both; }
+.navbar__mobile-menu.open .navbar__mobile-link:nth-child(3) { animation: slideInLeft 0.3s var(--ease-out) 0.15s both; }
+.navbar__mobile-menu.open .navbar__mobile-link:nth-child(4) { animation: slideInLeft 0.3s var(--ease-out) 0.2s both; }
+.navbar__mobile-menu.open .navbar__mobile-link:nth-child(5) { animation: slideInLeft 0.3s var(--ease-out) 0.25s both; }
+.navbar__mobile-menu.open .navbar__mobile-link:nth-child(6) { animation: slideInLeft 0.3s var(--ease-out) 0.3s both; }
+.navbar__mobile-menu.open .navbar__mobile-link:nth-child(7) { animation: slideInLeft 0.3s var(--ease-out) 0.35s both; }
+
+/* ----- HERO BACKGROUND ----- */
+.hero__bg-image {
+  animation: kenBurns 25s ease-in-out infinite;
+}
+
+/* ----- DASHBOARD ANIMATIONS ----- */
+.dashboard-stat-card {
+  animation: scaleIn 0.5s var(--ease-out) both;
+  transition: all 0.3s var(--ease-out);
+}
+.dashboard-stat-card:nth-child(1) { animation-delay: 0.1s; }
+.dashboard-stat-card:nth-child(2) { animation-delay: 0.2s; }
+.dashboard-stat-card:nth-child(3) { animation-delay: 0.3s; }
+
+.dashboard-stat-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 35px rgba(236, 72, 153, 0.2);
+}
+
+.dashboard-table tbody tr {
+  animation: float-up-fade 0.4s var(--ease-out) both;
+}
+.dashboard-table tbody tr:nth-child(1) { animation-delay: 0.05s; }
+.dashboard-table tbody tr:nth-child(2) { animation-delay: 0.1s; }
+.dashboard-table tbody tr:nth-child(3) { animation-delay: 0.15s; }
+.dashboard-table tbody tr:nth-child(n+4) { animation-delay: 0.2s; }
+
+/* ----- AVATAR ANIMATIONS ----- */
+.profile-avatar-large {
+  transition: all 0.3s var(--ease-out);
+}
+.profile-avatar-large:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 25px rgba(236, 72, 153, 0.4);
+}
+
+.profile-avatar-loading {
+  animation: spin 1s linear infinite;
+}
+
+/* ----- BADGE RARITY SHIMMER ----- */
+.rarity--legendary {
+  animation: borderGlow 3s ease-in-out infinite;
+}
+
+.profile-badge-card {
+  animation: scaleIn 0.4s var(--ease-out) both;
+}
+.profile-badge-card:nth-child(1) { animation-delay: 0.05s; }
+.profile-badge-card:nth-child(2) { animation-delay: 0.1s; }
+.profile-badge-card:nth-child(3) { animation-delay: 0.15s; }
+.profile-badge-card:nth-child(n+4) { animation-delay: 0.2s; }
+
+/* ----- INPUT FOCUS GLOW ----- */
+.contracts__input:focus,
+.contracts__select:focus,
+.contracts__textarea:focus,
+.wishlist__tribute-input:focus,
+.wishlist__tribute-message:focus,
+.login-input:focus {
+  animation: glowPulse 2s ease-in-out infinite;
+}
+
+/* ----- FORM SUCCESS ----- */
+.contracts__success,
+.profile-status--success {
+  animation: popIn 0.5s var(--ease-out) both;
+}
+
+/* ----- TOOLTIP / STATUS TOASTS ----- */
+.profile-status {
+  animation: slideInUp 0.3s var(--ease-out) both;
+}
+
+/* Subtle pink dust particles in the background */
 body::after {
   content: '';
   position: fixed;
@@ -119,13 +311,34 @@ body::after {
   width: 100vw;
   height: 100vh;
   background-image: 
-    radial-gradient(1px 1px at 20px 30px, rgba(212,168,67,0.3), transparent),
-    radial-gradient(1px 1px at 40px 70px, rgba(212,168,67,0.3), transparent),
-    radial-gradient(2px 2px at 90px 40px, rgba(212,168,67,0.4), transparent),
-    radial-gradient(1.5px 1.5px at 160px 120px, rgba(212,168,67,0.2), transparent);
+    radial-gradient(1px 1px at 20px 30px, rgba(236, 72, 153, 0.2), transparent),
+    radial-gradient(1px 1px at 40px 70px, rgba(236, 72, 153, 0.15), transparent),
+    radial-gradient(2px 2px at 90px 40px, rgba(236, 72, 153, 0.2), transparent),
+    radial-gradient(1.5px 1.5px at 160px 120px, rgba(236, 72, 153, 0.1), transparent),
+    radial-gradient(1px 1px at 110px 90px, rgba(244, 63, 94, 0.15), transparent),
+    radial-gradient(1.5px 1.5px at 180px 50px, rgba(236, 72, 153, 0.12), transparent);
   background-size: 200px 200px;
   z-index: -1;
-  opacity: 0.6;
+  opacity: 0.5;
   pointer-events: none;
-  animation: float-up-fade 20s linear infinite alternate;
+  animation: breathe 8s ease-in-out infinite;
+}
+
+/* ----- NAVBAR SCROLL ANIMATION ----- */
+.navbar {
+  transition: all 0.4s var(--ease-out);
+}
+.navbar.scrolled {
+  backdrop-filter: blur(20px) saturate(180%);
+}
+
+/* ----- HERO STATS COUNTER EFFECT ----- */
+.hero__stat {
+  transition: all 0.3s var(--ease-out);
+}
+.hero__stat:hover {
+  transform: translateY(-4px);
+}
+.hero__stat:hover .hero__stat-value {
+  text-shadow: 0 0 20px rgba(236, 72, 153, 0.5);
 }
