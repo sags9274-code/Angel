@@ -42,32 +42,20 @@ export const AuthProvider = ({ children }) => {
   const fetchUserData = async (userId) => {
     setLoading(true);
     try {
-      // Fetch Role
-      const { data: roleData, error: roleError } = await supabase
-        .from('user_roles')
-        .select('role')
-        .eq('user_id', userId)
-        .single();
-
-      if (roleError) {
-        console.error('Error fetching role:', roleError);
-        setRole(null);
-      } else if (roleData) {
-        setRole(roleData.role);
-      }
-
-      // Fetch Profile Username
+      // Fetch Profile (includes username, avatar_url, and role)
       const { data: profileData, error: profileError } = await supabase
         .from('profiles')
-        .select('username, avatar_url')
+        .select('role, username, avatar_url')
         .eq('id', userId)
         .single();
 
       if (profileError) {
         console.error('Error fetching profile:', profileError);
+        setRole(null);
         setUsername(null);
         setAvatarUrl(null);
       } else if (profileData) {
+        setRole(profileData.role || 'sub');
         setUsername(profileData.username);
         setAvatarUrl(profileData.avatar_url);
       }
