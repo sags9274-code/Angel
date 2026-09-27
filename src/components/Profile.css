@@ -28,7 +28,7 @@
   border-radius: var(--radius-lg);
   padding: var(--space-xl);
   backdrop-filter: blur(var(--blur-md));
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 8px 32px rgba(236, 72, 153, 0.2);
   overflow: visible;
   width: 100%;
   position: static;
@@ -38,7 +38,7 @@
   width: 120px;
   height: 120px;
   border-radius: 50%;
-  background: rgba(0, 0, 0, 0.4);
+  background: rgba(236, 72, 153, 0.4);
   border: 2px solid var(--color-gold);
   display: flex;
   align-items: center;
@@ -62,7 +62,7 @@
 .profile-page .profile-username {
   font-family: var(--font-display);
   font-size: 2.2rem;
-  color: #fff;
+  color: var(--color-text-primary);
   margin: 0;
   letter-spacing: 1px;
   word-break: break-all;
@@ -90,9 +90,9 @@
 }
 
 .profile-username-input {
-  background: rgba(0, 0, 0, 0.4);
+  background: var(--color-bg-primary);
   border: 1px solid var(--color-gold);
-  color: #fff;
+  color: var(--color-text-primary);
   padding: 8px 12px;
   border-radius: var(--radius-sm);
   font-family: var(--font-body);
@@ -148,7 +148,7 @@
 }
 
 .profile-status--info {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(236, 72, 153, 0.1);
   color: #ddd;
 }
 
@@ -202,7 +202,7 @@
 }
 
 .role-badge--sub {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(236, 72, 153, 0.1);
   color: #ccc;
   border: 1px solid rgba(255, 255, 255, 0.3);
 }
@@ -219,7 +219,7 @@
 .profile-empty-state {
   text-align: center;
   padding: 40px;
-  background: rgba(0, 0, 0, 0.2);
+  background: rgba(236, 72, 153, 0.2);
   border: 1px dashed var(--color-border);
   border-radius: var(--radius-md);
   color: var(--color-text-secondary);
@@ -258,7 +258,7 @@
 .profile-badge-name {
   font-family: var(--font-heading);
   font-size: 1.1rem;
-  color: #fff;
+  color: var(--color-text-primary);
   margin-bottom: 8px;
 }
 
