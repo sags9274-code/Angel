@@ -3,6 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import { supabase } from '../supabaseClient';
 import { useAuth } from '../context/AuthContext';
 
+const ACCEPTED_EXTENSIONS = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'mp4', 'webm', 'mov'];
+const ACCEPTED_MIME_TYPES = [
+  'image/jpeg', 'image/png', 'image/gif', 'image/webp',
+  'video/mp4', 'video/webm', 'video/quicktime'
+];
+
 export default function FreeTasks() {
   const { user, role } = useAuth();
   const navigate = useNavigate();
@@ -21,7 +27,13 @@ export default function FreeTasks() {
   // Proof Submission State (Subs)
   const [selectedTaskForProof, setSelectedTaskForProof] = useState(null);
   const [proofText, setProofText] = useState('');
-  const [proofFile, setProofFile] = useState(null);
+  
+  // Multi-upload state for Subs
+  const [pendingFiles, setPendingFiles] = useState([]);
+  const [pendingPreviews, setPendingPreviews] = useState([]);
+  const [isDragging, setIsDragging] = useState(false);
+  const [errorMsg, setErrorMsg] = useState(null);
+  
   const [isUploadingProof, setIsUploadingProof] = useState(false);
   const fileInputRef = useRef(null);
 
@@ -122,62 +134,131 @@ export default function FreeTasks() {
     if (!isSub || completedTaskIds.has(task.id)) return;
     setSelectedTaskForProof(task);
     setProofText('');
-    setProofFile(null);
+    setPendingFiles([]);
+    setPendingPreviews([]);
+    setErrorMsg(null);
   };
+
+  // Multi-file drag and drop logic
+  const processFiles = (files) => {
+    if (!files || files.length === 0) return;
+
+    const validFiles = [];
+    const validPreviews = [];
+    let hasError = false;
+
+    Array.from(files).forEach((file) => {
+      const fileExt = file.name.split('.').pop()?.toLowerCase() || '';
+      const isMimeValid = ACCEPTED_MIME_TYPES.includes(file.type);
+      const isExtValid = ACCEPTED_EXTENSIONS.includes(fileExt);
+
+      if (!isMimeValid && !isExtValid) {
+        hasError = true;
+      } else if (file.size > 50 * 1024 * 1024) {
+        hasError = true; // Size limit 50MB
+      } else {
+        validFiles.push(file);
+        validPreviews.push({
+          url: URL.createObjectURL(file),
+          type: file.type.startsWith('video/') ? 'video' : 'image'
+        });
+      }
+    });
+
+    if (hasError) {
+      setErrorMsg('Some files were ignored. Only images and videos (.mp4, .webm, .mov) up to 50MB are allowed.');
+    } else {
+      setErrorMsg(null);
+    }
+
+    setPendingFiles(prev => [...prev, ...validFiles]);
+    setPendingPreviews(prev => [...prev, ...validPreviews]);
+  };
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!isDragging) setIsDragging(true);
+  };
+
+  const handleDragEnter = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (e.currentTarget.contains(e.relatedTarget)) return;
+    setIsDragging(false);
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+    processFiles(e.dataTransfer?.files);
+  };
+
+  const handleFileChange = (e) => {
+    processFiles(e.target.files);
+  };
+
+  const handleBrowseClick = () => {
+    if (fileInputRef.current) fileInputRef.current.click();
+  };
+
+  const handleRemovePreview = (index) => {
+    setPendingFiles(prev => prev.filter((_, i) => i !== index));
+    setPendingPreviews(prev => prev.filter((_, i) => i !== index));
+  };
+
 
   // Sub submits their proof
   const handleProofSubmit = async (e) => {
     e.preventDefault();
-    if (!proofText && !proofFile) {
+    if (!proofText && pendingFiles.length === 0) {
       alert("You must submit either text or a file to prove your worth.");
       return;
     }
 
     setIsUploadingProof(true);
-    let proofUrl = null;
-
-    // 1. Upload File (if provided)
-    if (proofFile) {
-      // Check file size limit (e.g., max 50MB)
-      if (proofFile.size > 50 * 1024 * 1024) {
-        alert("File size exceeds 50MB limit.");
-        setIsUploadingProof(false);
-        return;
-      }
-
-      const fileExt = proofFile.name.split('.').pop();
-      const fileName = `${user.id}-${Date.now()}.${fileExt}`;
-      
-      const { data: uploadData, error: uploadError } = await supabase.storage
-        .from('task_proofs')
-        .upload(fileName, proofFile, {
-          cacheControl: '3600',
-          upsert: false
-        });
-
-      if (uploadError) {
-        console.error("Upload error:", uploadError);
-        alert("Failed to upload file. Please try again.");
-        setIsUploadingProof(false);
-        return;
-      }
-
-      // Get public URL
-      const { data: urlData } = supabase.storage
-        .from('task_proofs')
-        .getPublicUrl(fileName);
+    
+    // Upload all files to storage
+    const uploadedUrls = [];
+    
+    if (pendingFiles.length > 0) {
+      for (const file of pendingFiles) {
+        const fileExt = file.name.split('.').pop();
+        const fileName = `${user.id}-${Date.now()}_${Math.random().toString(36).substring(2, 9)}.${fileExt}`;
         
-      proofUrl = urlData.publicUrl;
+        const { error: uploadError } = await supabase.storage
+          .from('task_proofs')
+          .upload(fileName, file);
+          
+        if (uploadError) {
+          setErrorMsg('Failed to upload a file: ' + uploadError.message);
+          setIsUploadingProof(false);
+          return;
+        }
+        
+        const { data: urlData } = supabase.storage
+          .from('task_proofs')
+          .getPublicUrl(fileName);
+          
+        uploadedUrls.push(urlData.publicUrl);
+      }
     }
 
-    // 2. Insert into task_completions
+    // Insert into task_completions
     const { error } = await supabase
       .from('task_completions')
       .insert([{ 
         task_id: selectedTaskForProof.id, 
         user_id: user.id,
         proof_text: proofText || null,
-        proof_file_url: proofUrl
+        proof_media_urls: uploadedUrls
       }]);
 
     if (error) {
@@ -211,6 +292,42 @@ export default function FreeTasks() {
     }
     
     setIsLoadingProofs(false);
+  };
+  
+  // Media Carousel Renderer
+  const renderMedia = (urls, fallbackUrl) => {
+    let activeUrls = [];
+    if (urls && urls.length > 0) activeUrls = urls;
+    else if (fallbackUrl) activeUrls = [fallbackUrl];
+    
+    if (activeUrls.length === 0) return null;
+
+    if (activeUrls.length === 1) {
+      const url = activeUrls[0];
+      const isVideo = url.match(/\.(mp4|webm|mov)(\?.*)?$/i);
+      return isVideo ? (
+        <video src={url} controls className="wall__card-media-item" style={{maxHeight: '300px', width: '100%', objectFit: 'contain', background: '#000', borderRadius: '8px', marginTop: '10px'}} />
+      ) : (
+        <img src={url} alt="Proof evidence" className="wall__card-media-item" loading="lazy" style={{maxHeight: '300px', width: '100%', objectFit: 'contain', background: '#000', borderRadius: '8px', marginTop: '10px'}} />
+      );
+    }
+
+    return (
+      <div className="wall__card-carousel" style={{ marginTop: '10px', borderRadius: '8px', overflow: 'hidden' }}>
+        {activeUrls.map((url, i) => {
+          const isVideo = url.match(/\.(mp4|webm|mov)(\?.*)?$/i);
+          return (
+            <div key={i} className="wall__card-carousel-slide">
+              {isVideo ? (
+                <video src={url} controls className="wall__card-media-item" style={{maxHeight: '300px', width: '100%', objectFit: 'contain', background: '#000'}} />
+              ) : (
+                <img src={url} alt={`Evidence ${i+1}`} className="wall__card-media-item" loading="lazy" style={{maxHeight: '300px', width: '100%', objectFit: 'contain', background: '#000'}} />
+              )}
+            </div>
+          );
+        })}
+      </div>
+    );
   };
 
   // Calculate points
@@ -438,7 +555,7 @@ export default function FreeTasks() {
       {/* Sub Proof Submission Modal */}
       {selectedTaskForProof && (
         <div className="modal-overlay" style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.8)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, padding: '1rem' }}>
-          <div className="modal-content" style={{ background: 'var(--color-bg-secondary)', padding: '2rem', borderRadius: 'var(--radius-lg)', border: '1px solid var(--color-gold)', width: '100%', maxWidth: '500px' }}>
+          <div className="modal-content" style={{ background: 'var(--color-bg-secondary)', padding: '2rem', borderRadius: 'var(--radius-lg)', border: '1px solid var(--color-gold)', width: '100%', maxWidth: '600px', maxHeight: '90vh', overflowY: 'auto' }}>
             <h3 style={{ color: 'var(--color-gold)', fontSize: '1.5rem', marginBottom: '0.5rem' }}>Submit Proof</h3>
             <p style={{ color: 'var(--color-text-secondary)', marginBottom: '1.5rem' }}>{selectedTaskForProof.title}</p>
             
@@ -455,15 +572,60 @@ export default function FreeTasks() {
               </div>
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                <label style={{ color: 'var(--color-text-secondary)' }}>Media Evidence (Photo/Video/Audio)</label>
-                <input 
-                  type="file" 
-                  ref={fileInputRef}
-                  onChange={(e) => setProofFile(e.target.files[0])}
-                  accept="image/*,video/*,audio/*"
-                  style={{ color: 'var(--color-text-primary)' }}
-                />
-                <small style={{ color: 'var(--color-text-muted)' }}>Max file size: 50MB</small>
+                <label style={{ color: 'var(--color-text-secondary)' }}>Media Evidence (Photos/Videos)</label>
+                <div
+                  className={`upload-zone ${isDragging ? 'upload-zone--dragging' : ''}`}
+                  onDragOver={handleDragOver}
+                  onDragEnter={handleDragEnter}
+                  onDragLeave={handleDragLeave}
+                  onDrop={handleDrop}
+                  onClick={pendingPreviews.length === 0 ? handleBrowseClick : undefined}
+                  style={{ minHeight: '150px' }}
+                >
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    multiple
+                    accept="image/*,video/*"
+                    onChange={handleFileChange}
+                    className="upload-zone__input"
+                    style={{ display: 'none' }}
+                  />
+
+                  {pendingPreviews.length === 0 ? (
+                    <div className="upload-zone__empty-state">
+                      <div className="upload-zone__icon-container">
+                        <span style={{fontSize: '2rem'}}>📸🎥</span>
+                      </div>
+                      <h3 className="upload-zone__headline">
+                        {isDragging ? 'Drop Photos/Videos Here' : 'Drag & Drop Media'}
+                      </h3>
+                      <p className="upload-zone__description">
+                        Drop multiple files here, or <span className="upload-zone__browse-btn">browse files</span>
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="upload-zone__active-state" onClick={(e) => e.stopPropagation()}>
+                      <div className="upload-zone__multi-preview">
+                        {pendingPreviews.map((p, i) => (
+                          <div key={i} className="upload-zone__thumb-frame-multi">
+                            {p.type === 'video' ? (
+                              <video src={p.url} className="upload-zone__thumb-img" />
+                            ) : (
+                              <img src={p.url} alt="Preview" className="upload-zone__thumb-img" />
+                            )}
+                            <button type="button" className="upload-zone__remove-thumb" onClick={() => handleRemovePreview(i)}>&times;</button>
+                          </div>
+                        ))}
+                        <button type="button" className="upload-zone__add-more" onClick={handleBrowseClick}>+</button>
+                      </div>
+                    </div>
+                  )}
+
+                  {errorMsg && (
+                    <div className="upload-zone__error-banner" style={{ marginTop: '10px' }}><span>⚠️ {errorMsg}</span></div>
+                  )}
+                </div>
               </div>
 
               <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
@@ -482,7 +644,7 @@ export default function FreeTasks() {
       {/* Goddess Proof Viewing Modal */}
       {viewingProofsForTask && (
         <div className="modal-overlay" style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.8)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, padding: '1rem' }}>
-          <div className="modal-content" style={{ background: 'var(--color-bg-secondary)', padding: '2rem', borderRadius: 'var(--radius-lg)', border: '1px solid var(--color-gold)', width: '100%', maxWidth: '600px', maxHeight: '80vh', overflowY: 'auto' }}>
+          <div className="modal-content" style={{ background: 'var(--color-bg-secondary)', padding: '2rem', borderRadius: 'var(--radius-lg)', border: '1px solid var(--color-gold)', width: '100%', maxWidth: '600px', maxHeight: '90vh', overflowY: 'auto' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1.5rem' }}>
               <div>
                 <h3 style={{ color: 'var(--color-gold)', fontSize: '1.5rem', marginBottom: '0.5rem' }}>Submissions</h3>
@@ -496,30 +658,25 @@ export default function FreeTasks() {
             ) : proofsList.length === 0 ? (
               <p style={{ textAlign: 'center', color: 'var(--color-text-muted)', padding: '2rem' }}>No subs have completed this task yet.</p>
             ) : (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
                 {proofsList.map((proof, i) => (
-                  <div key={proof.id} style={{ background: 'var(--color-bg-card)', padding: '1rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--color-border)' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+                  <div key={proof.id} style={{ background: 'var(--color-bg-card)', padding: '1.5rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--color-border)' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem', paddingBottom: '0.5rem', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
                       <span style={{ color: 'var(--color-gold)', fontWeight: 'bold' }}>Sub #{proof.user_id.substring(0, 8)}</span>
                       <span style={{ color: 'var(--color-text-muted)', fontSize: '0.85rem' }}>{new Date(proof.created_at).toLocaleString()}</span>
                     </div>
                     
                     {proof.proof_text && (
-                      <div style={{ marginBottom: '1rem', padding: '0.5rem', background: 'rgba(0,0,0,0.3)', borderRadius: 'var(--radius-sm)' }}>
+                      <div style={{ marginBottom: '1rem', padding: '1rem', background: 'rgba(0,0,0,0.3)', borderRadius: 'var(--radius-sm)' }}>
                         <p style={{ whiteSpace: 'pre-wrap', color: 'var(--color-text-primary)' }}>{proof.proof_text}</p>
                       </div>
                     )}
                     
-                    {proof.proof_file_url && (
-                      <div style={{ marginTop: '0.5rem' }}>
-                        <a href={proof.proof_file_url} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--color-gold)', textDecoration: 'underline' }}>
-                          View Attached Media Proof ↗
-                        </a>
-                      </div>
-                    )}
+                    {/* Render Inline Media Gallery */}
+                    {renderMedia(proof.proof_media_urls, proof.proof_file_url)}
                     
-                    {!proof.proof_text && !proof.proof_file_url && (
-                      <p style={{ color: 'var(--color-text-muted)', fontStyle: 'italic' }}>No proof provided (Completed before requirement).</p>
+                    {!proof.proof_text && (!proof.proof_media_urls || proof.proof_media_urls.length === 0) && !proof.proof_file_url && (
+                      <p style={{ color: 'var(--color-text-muted)', fontStyle: 'italic', marginTop: '0.5rem' }}>No proof provided.</p>
                     )}
                   </div>
                 ))}
