@@ -95,8 +95,8 @@ export default function Profile() {
       setSaveStatus({ message: 'Avatar updated successfully!', type: 'success' });
       setTimeout(() => setSaveStatus({ message: '', type: '' }), 3000);
     } catch (error) {
-      console.error(error);
-      setSaveStatus({ message: 'Error uploading avatar.', type: 'error' });
+      console.error('Avatar upload error:', error);
+      setSaveStatus({ message: `Error: ${error.message || 'Error uploading avatar'}`, type: 'error' });
     } finally {
       setIsUploadingAvatar(false);
     }
@@ -135,11 +135,11 @@ export default function Profile() {
     try {
       const { error } = await supabase
         .from('profiles')
-        .update({ username: newUsername.trim() })
-        .eq('id', user.id);
+        .upsert({ id: user.id, username: newUsername.trim() }, { onConflict: 'id' });
 
       if (error) {
-        setSaveStatus({ message: 'Error updating username. It might be taken.', type: 'error' });
+        console.error('Username update error:', error);
+        setSaveStatus({ message: `Error: ${error.message || 'Unknown error'}`, type: 'error' });
       } else {
         setUsername(newUsername.trim());
         setIsEditingUsername(false);
@@ -147,6 +147,7 @@ export default function Profile() {
         setTimeout(() => setSaveStatus({ message: '', type: '' }), 3000);
       }
     } catch (err) {
+      console.error(err);
       setSaveStatus({ message: 'Unexpected error.', type: 'error' });
     }
   };
