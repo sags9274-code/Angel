@@ -7,6 +7,7 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [role, setRole] = useState(null); // 'goddess', 'developer', 'sub', or null
   const [username, setUsername] = useState(null);
+  const [avatarUrl, setAvatarUrl] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -28,6 +29,7 @@ export const AuthProvider = ({ children }) => {
       } else {
         setRole(null);
         setUsername(null);
+        setAvatarUrl(null);
         setLoading(false);
       }
     });
@@ -57,21 +59,24 @@ export const AuthProvider = ({ children }) => {
       // Fetch Profile Username
       const { data: profileData, error: profileError } = await supabase
         .from('profiles')
-        .select('username')
+        .select('username, avatar_url')
         .eq('id', userId)
         .single();
 
       if (profileError) {
         console.error('Error fetching profile:', profileError);
         setUsername(null);
+        setAvatarUrl(null);
       } else if (profileData) {
         setUsername(profileData.username);
+        setAvatarUrl(profileData.avatar_url);
       }
 
     } catch (err) {
       console.error(err);
       setRole(null);
       setUsername(null);
+        setAvatarUrl(null);
     } finally {
       setLoading(false);
     }
