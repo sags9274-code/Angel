@@ -41,11 +41,11 @@ export default function Hero() {
 
           {/* CTA Buttons */}
           <div className="hero__ctas">
-            <button className="hero__cta-primary" id="cta-vip">
+            <button className="hero__cta-primary" id="cta-vip" onClick={() => window.open('https://ouish.co/tribute', '_blank')}>
               <span className="hero__cta-icon">✦</span>
               Submit to My VIP Tier
             </button>
-            <button className="hero__cta-secondary" id="cta-tribute">
+            <button className="hero__cta-secondary" id="cta-tribute" onClick={() => window.open('https://ouish.co/tribute', '_blank')}>
               <span className="hero__cta-icon">🎁</span>
               Offer Immediate Tribute
             </button>
