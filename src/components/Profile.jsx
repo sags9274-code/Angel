@@ -102,6 +102,30 @@ export default function Profile() {
     }
   };
 
+  const handleRemoveAvatar = async () => {
+    try {
+      if (!avatarUrl) return;
+      setIsUploadingAvatar(true);
+      setSaveStatus({ message: 'Removing avatar...', type: 'info' });
+      
+      const { error: updateError } = await supabase
+        .from('profiles')
+        .update({ avatar_url: null })
+        .eq('id', user.id);
+
+      if (updateError) throw updateError;
+
+      setAvatarUrl(null);
+      setSaveStatus({ message: 'Avatar removed successfully!', type: 'success' });
+      setTimeout(() => setSaveStatus({ message: '', type: '' }), 3000);
+    } catch (error) {
+      console.error(error);
+      setSaveStatus({ message: 'Error removing avatar.', type: 'error' });
+    } finally {
+      setIsUploadingAvatar(false);
+    }
+  };
+
   const handleUpdateUsername = async (e) => {
     e.preventDefault();
     if (!newUsername.trim()) return;
@@ -147,21 +171,40 @@ export default function Profile() {
       <div className="profile-content">
         {/* Profile Card */}
         <div className="profile-card">
-          <div className="profile-avatar-large" style={{ position: 'relative', cursor: 'pointer' }} onClick={() => document.getElementById('avatar-upload').click()}>
-            {avatarUrl ? (
-              <img src={avatarUrl} alt="Avatar" className="profile-avatar-img" />
-            ) : (
-              role === 'goddess' ? '👑' : role === 'developer' ? '💻' : '👤'
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem' }}>
+            <div className="profile-avatar-large" style={{ position: 'relative', cursor: 'pointer' }} onClick={() => document.getElementById('avatar-upload').click()}>
+              {avatarUrl ? (
+                <img src={avatarUrl} alt="Avatar" className="profile-avatar-img" />
+              ) : (
+                role === 'goddess' ? '👑' : role === 'developer' ? '💻' : '👤'
+              )}
+              <input 
+                type="file" 
+                id="avatar-upload" 
+                accept="image/*" 
+                style={{ display: 'none' }} 
+                onChange={handleAvatarUpload} 
+                disabled={isUploadingAvatar}
+              />
+              {isUploadingAvatar && <div className="profile-avatar-loading">⏳</div>}
+            </div>
+            {avatarUrl && (
+              <button 
+                onClick={handleRemoveAvatar}
+                disabled={isUploadingAvatar}
+                style={{
+                  background: 'transparent',
+                  border: '1px solid var(--color-accent)',
+                  color: 'var(--color-accent)',
+                  padding: '4px 12px',
+                  borderRadius: 'var(--radius-full)',
+                  fontSize: '0.8rem',
+                  cursor: 'pointer'
+                }}
+              >
+                Remove Pic
+              </button>
             )}
-            <input 
-              type="file" 
-              id="avatar-upload" 
-              accept="image/*" 
-              style={{ display: 'none' }} 
-              onChange={handleAvatarUpload} 
-              disabled={isUploadingAvatar}
-            />
-            {isUploadingAvatar && <div className="profile-avatar-loading">⏳</div>}
           </div>
           
           <div className="profile-info">
