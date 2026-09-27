@@ -108,7 +108,7 @@ export default function Dashboard() {
   if (!isGoddessOrDev) return null;
 
   return (
-    <div className="page dashboard-page" style={{ paddingTop: '100px', minHeight: '100vh', padding: '100px 20px 40px', maxWidth: '1200px', margin: '0 auto' }}>
+    <div className="page dashboard-page" style={{ paddingTop: '100px', minHeight: '100vh', paddingLeft: '20px', paddingRight: '20px', paddingBottom: '40px', maxWidth: '1200px', margin: '0 auto' }}>
       <header className="page__header" style={{ textAlign: 'center', marginBottom: '3rem' }}>
         <h1 className="page__title" style={{ color: 'var(--color-gold)' }}>Admin Dashboard</h1>
         <p className="page__subtitle">Track your subjects' loyalty and performance.</p>
@@ -119,7 +119,7 @@ export default function Dashboard() {
       ) : (
         <>
           {/* Top Stats */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1.5rem', marginBottom: '3rem' }}>
+          <div className="dashboard-stats-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '1rem', marginBottom: '3rem' }}>
             <div className="dashboard-stat-card">
               <h3>Total Subs</h3>
               <p className="dashboard-stat-value">{stats.totalSubs}</p>
@@ -164,16 +164,16 @@ export default function Dashboard() {
                   {filteredSubs.length > 0 ? (
                     filteredSubs.map(sub => (
                       <tr key={sub.id}>
-                        <td>
+                        <td data-label="Sub">
                           <div style={{ fontWeight: 'bold', color: 'var(--color-text-primary)' }}>{sub.username}</div>
                           {sub.email && <div style={{ fontSize: '0.85rem', color: 'var(--color-text-secondary)' }}>{sub.email}</div>}
                           <div style={{ fontSize: '0.8rem', color: 'var(--color-text-muted)' }}>{sub.id.substring(0, 8)}...</div>
                         </td>
-                        <td>{sub.joined}</td>
-                        <td>{sub.tasksCompleted}</td>
-                        <td style={{ color: 'var(--color-gold)' }}>+{sub.earned}</td>
-                        <td style={{ color: 'var(--color-accent)' }}>-{sub.spent}</td>
-                        <td style={{ fontWeight: 'bold' }}>{sub.earned - sub.spent}</td>
+                        <td data-label="Joined">{sub.joined}</td>
+                        <td data-label="Tasks">{sub.tasksCompleted}</td>
+                        <td data-label="Earned" style={{ color: 'var(--color-gold)' }}>+{sub.earned}</td>
+                        <td data-label="Spent" style={{ color: 'var(--color-accent)' }}>-{sub.spent}</td>
+                        <td data-label="Balance" style={{ fontWeight: 'bold' }}>{sub.earned - sub.spent}</td>
                       </tr>
                     ))
                   ) : (
