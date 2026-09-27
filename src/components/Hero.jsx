@@ -53,16 +53,16 @@ export default function Hero() {
           {/* Stats */}
           <div className="hero__stats">
             <div className="hero__stat">
-              <span className="hero__stat-value">Sign up</span>
-              <span className="hero__stat-label">At your own risk</span>
+              <span className="hero__stat-value">Total Devotion</span>
+              <span className="hero__stat-label">Surrender Now</span>
             </div>
             <div className="hero__stat">
-              <span className="hero__stat-value">&lt; 15m</span>
-              <span className="hero__stat-label">Priority Response</span>
+              <span className="hero__stat-value">&lt; 5m</span>
+              <span className="hero__stat-label">Brutal Responses</span>
             </div>
             <div className="hero__stat">
-              <span className="hero__stat-value">SFW Fine Art</span>
-              <span className="hero__stat-label">Haute Standard</span>
+              <span className="hero__stat-value">Elite Tier</span>
+              <span className="hero__stat-label">Premium Goddess</span>
             </div>
           </div>
         </div>
