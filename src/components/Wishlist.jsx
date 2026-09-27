@@ -6,14 +6,8 @@ export default function Wishlist() {
   const links = [
     {
       id: 1,
-      title: 'www.g2a.com',
-      url: 'https://www.g2a.com',
-      hasAvatar: false,
-    },
-    {
-      id: 2,
       title: 'Goddess mikky✨',
-      url: '#',
+      url: 'https://linktr.ee/goddessmikky23',
       hasAvatar: true,
     }
   ];
@@ -66,7 +60,7 @@ export default function Wishlist() {
         </div>
 
         <div className="linktree-footer">
-          <a href="#" className="linktree-join-btn">
+          <a href="https://linktr.ee/goddessmikky23" target="_blank" rel="noopener noreferrer" className="linktree-join-btn">
             Join goddessmikky23 on Linktree
           </a>
         </div>
