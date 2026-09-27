@@ -27,9 +27,6 @@ export default function Contracts() {
 
   // Form State
   const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [contractType, setContractType] = useState(CONTRACT_TYPES[0]);
-  const [terms, setTerms] = useState('');
   
   // File Upload State
   const [pendingFiles, setPendingFiles] = useState([]);
@@ -180,9 +177,7 @@ export default function Contracts() {
       .from('contracts')
       .insert([{
         name,
-        email: email || null,
-        contract_type: contractType,
-        terms: terms || null,
+        contract_type: 'Standard',
         file_urls: uploadedUrls
       }])
       .select()
@@ -194,9 +189,6 @@ export default function Contracts() {
       setContracts([data, ...contracts]);
       // Reset form
       setName('');
-      setEmail('');
-      setContractType(CONTRACT_TYPES[0]);
-      setTerms('');
       setPendingFiles([]);
     }
     
@@ -236,55 +228,16 @@ export default function Contracts() {
         <form className="contracts__form" id="contracts-form" onSubmit={handleSubmit} style={{ marginBottom: '4rem' }}>
           <h2 style={{ color: 'var(--color-gold)', marginBottom: '1.5rem' }}>Create New Contract</h2>
           
-          <div className="contracts__row">
-            <div className="contracts__field">
-              <label className="contracts__label" htmlFor="contract-name">Sub Name / Alias</label>
-              <input
-                type="text"
-                id="contract-name"
-                className="contracts__input"
-                placeholder="Name of the sub"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                required
-              />
-            </div>
-            <div className="contracts__field">
-              <label className="contracts__label" htmlFor="contract-email">Sub Email (Optional)</label>
-              <input
-                type="email"
-                id="contract-email"
-                className="contracts__input"
-                placeholder="sub@example.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </div>
-          </div>
-
           <div className="contracts__field">
-            <label className="contracts__label" htmlFor="contract-type">Contract Type</label>
-            <select
-              id="contract-type"
-              className="contracts__select"
-              value={contractType}
-              onChange={(e) => setContractType(e.target.value)}
-            >
-              {CONTRACT_TYPES.map((type) => (
-                <option key={type} value={type}>{type}</option>
-              ))}
-            </select>
-          </div>
-
-          <div className="contracts__field">
-            <label className="contracts__label" htmlFor="contract-terms">Terms/Notes</label>
-            <textarea
-              id="contract-terms"
-              className="contracts__textarea"
-              placeholder="Specify your terms, conditions, or servitude notes..."
-              value={terms}
-              onChange={(e) => setTerms(e.target.value)}
-              rows={4}
+            <label className="contracts__label" htmlFor="contract-name">Contract Name</label>
+            <input
+              type="text"
+              id="contract-name"
+              className="contracts__input"
+              placeholder="e.g. Servitude Agreement"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
             />
           </div>
 
