@@ -57,30 +57,17 @@ export default function Navbar() {
         {/* Desktop Links */}
         <div className="navbar__links">
           {NAV_LINKS.map((link) => (
-          <NavLink
-            key={link.label}
-            to={link.to}
-            end={link.to === '/'}
-            className={({ isActive }) =>
-              `navbar__mobile-link ${isActive ? 'navbar__mobile-link--active' : ''}`
-            }
-            onClick={() => setMobileOpen(false)}
-          >
-            {link.label}
-          </NavLink>
-        ))}
-        {isGoddessOrDev && (
-          <NavLink
-            to="/dashboard"
-            className={({ isActive }) =>
-              `navbar__mobile-link ${isActive ? 'navbar__mobile-link--active' : ''}`
-            }
-            style={{ color: 'var(--color-gold)' }}
-            onClick={() => setMobileOpen(false)}
-          >
-            Dashboard
-          </NavLink>
-        )}
+            <NavLink
+              key={link.label}
+              to={link.to}
+              end={link.to === '/'}
+              className={({ isActive }) =>
+                `navbar__link ${isActive ? 'navbar__link--active' : ''}`
+              }
+            >
+              {link.label}
+            </NavLink>
+          ))}
           {isGoddessOrDev && (
             <NavLink
               to="/dashboard"
