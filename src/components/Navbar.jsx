@@ -16,7 +16,7 @@ export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
-  const { user, logout, role } = useAuth();
+  const { user, logout, role, avatarUrl } = useAuth();
   const isGoddessOrDev = role === 'goddess' || role === 'developer';
 
   const handleAuthAction = async () => {
@@ -87,8 +87,12 @@ export default function Navbar() {
             {user ? 'Log Out' : 'Authenticate'}
           </button>
           {user ? (
-            <Link to="/profile" className="navbar__avatar" id="nav-avatar" title="View Profile">
-              <span style={{ fontSize: '1rem' }}>👤</span>
+            <Link to="/profile" className="navbar__avatar" id="nav-avatar" title="View Profile" style={{ overflow: 'hidden' }}>
+              {avatarUrl ? (
+                <img src={avatarUrl} alt="Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+              ) : (
+                <span style={{ fontSize: '1rem' }}>{role === 'goddess' ? '👑' : role === 'developer' ? '💻' : '👤'}</span>
+              )}
             </Link>
           ) : (
             <div className="navbar__avatar" id="nav-avatar">

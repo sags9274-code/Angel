@@ -4,7 +4,7 @@ import { supabase } from '../supabaseClient';
 import './Profile.css';
 
 export default function Profile() {
-  const { user, role, username, setUsername } = useAuth();
+  const { user, role, username, setUsername, avatarUrl, setAvatarUrl } = useAuth();
   const [points, setPoints] = useState(0);
   const [badges, setBadges] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -55,6 +55,53 @@ export default function Profile() {
     }
   };
 
+    const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
+
+  const handleAvatarUpload = async (event) => {
+    try {
+      setIsUploadingAvatar(true);
+      setSaveStatus({ message: 'Uploading avatar...', type: 'info' });
+      
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${user.id}-${Math.random()}.${fileExt}`;
+      const filePath = `${user.id}/${fileName}`;
+
+      // Upload to storage
+      const { error: uploadError } = await supabase.storage
+        .from('avatars')
+        .upload(filePath, file);
+
+      if (uploadError) throw uploadError;
+
+      // Get public URL
+      const { data: urlData } = supabase.storage
+        .from('avatars')
+        .getPublicUrl(filePath);
+
+      const newAvatarUrl = urlData.publicUrl;
+
+      // Update profile record
+      const { error: updateError } = await supabase
+        .from('profiles')
+        .update({ avatar_url: newAvatarUrl })
+        .eq('id', user.id);
+
+      if (updateError) throw updateError;
+
+      setAvatarUrl(newAvatarUrl);
+      setSaveStatus({ message: 'Avatar updated successfully!', type: 'success' });
+      setTimeout(() => setSaveStatus({ message: '', type: '' }), 3000);
+    } catch (error) {
+      console.error(error);
+      setSaveStatus({ message: 'Error uploading avatar.', type: 'error' });
+    } finally {
+      setIsUploadingAvatar(false);
+    }
+  };
+
   const handleUpdateUsername = async (e) => {
     e.preventDefault();
     if (!newUsername.trim()) return;
@@ -100,8 +147,21 @@ export default function Profile() {
       <div className="profile-content">
         {/* Profile Card */}
         <div className="profile-card">
-          <div className="profile-avatar-large">
-            {role === 'goddess' ? '👑' : role === 'developer' ? '💻' : '👤'}
+          <div className="profile-avatar-large" style={{ position: 'relative', cursor: 'pointer' }} onClick={() => document.getElementById('avatar-upload').click()}>
+            {avatarUrl ? (
+              <img src={avatarUrl} alt="Avatar" className="profile-avatar-img" />
+            ) : (
+              role === 'goddess' ? '👑' : role === 'developer' ? '💻' : '👤'
+            )}
+            <input 
+              type="file" 
+              id="avatar-upload" 
+              accept="image/*" 
+              style={{ display: 'none' }} 
+              onChange={handleAvatarUpload} 
+              disabled={isUploadingAvatar}
+            />
+            {isUploadingAvatar && <div className="profile-avatar-loading">⏳</div>}
           </div>
           
           <div className="profile-info">
