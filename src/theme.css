@@ -2,10 +2,7 @@
    FINDOM / FEMDOM THEME & ANIMATIONS OVERRIDE
    ================================================================ */
 
-/* ----- GLOBAL THEME ADJUSTMENTS ----- */
-body {
-  background: radial-gradient(circle at top right, #1a0f00 0%, var(--color-bg-primary) 40%);
-}
+
 
 .page__title {
   animation: float-up-fade 1s var(--ease-out) both;
@@ -111,10 +108,7 @@ body {
   text-shadow: 0 0 10px rgba(212, 168, 67, 0.3);
 }
 
-/* Add a gold vignette to the hero to make it feel more luxurious */
-.hero__bg-vignette {
-  background: radial-gradient(ellipse at center, transparent 30%, rgba(10, 8, 5, 0.9) 100%);
-}
+/* Remove dark gold vignette for light theme */
 
 /* Subtle gold dust particles in the background (using CSS pseudo-elements) */
 body::after {
