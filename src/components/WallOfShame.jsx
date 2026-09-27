@@ -540,7 +540,7 @@ export default function WallOfShame() {
                         style={{
                           background: 'none', border: 'none', cursor: 'pointer',
                           display: 'flex', alignItems: 'center', gap: '5px',
-                          color: likes[item.id]?.userLiked ? 'var(--color-primary)' : 'var(--color-text-muted)',
+                          color: likes[item.id]?.userLiked ? 'var(--color-gold)' : 'var(--color-text-muted)',
                           fontWeight: 'bold', fontSize: '1rem', transition: 'transform 0.2s'
                         }}
                         onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.1)'}

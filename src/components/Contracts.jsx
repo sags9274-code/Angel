@@ -361,13 +361,13 @@ export default function Contracts() {
                             background: 'var(--color-bg-secondary)',
                             border: '1px solid var(--color-gold)',
                             borderRadius: '2rem',
-                            color: 'white',
+                            color: 'var(--color-text-primary)',
                             textDecoration: 'none',
                             fontSize: '0.9rem',
                             transition: 'all 0.2s ease'
                           }}
-                          onMouseOver={(e) => { e.currentTarget.style.background = 'var(--color-gold)'; e.currentTarget.style.color = 'black'; }}
-                          onMouseOut={(e) => { e.currentTarget.style.background = 'var(--color-bg-secondary)'; e.currentTarget.style.color = 'white'; }}
+                          onMouseOver={(e) => { e.currentTarget.style.background = 'var(--color-gold)'; e.currentTarget.style.color = 'white'; }}
+                          onMouseOut={(e) => { e.currentTarget.style.background = 'var(--color-bg-secondary)'; e.currentTarget.style.color = 'var(--color-text-primary)'; }}
                         >
                           {isImage ? '🖼️' : '📄'} Document {i+1}
                         </a>
