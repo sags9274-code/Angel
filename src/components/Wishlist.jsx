@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react';
-import PaymentModal from './PaymentModal';
+import { handleCheckout } from '../utils/checkout';
 
 import handbagImg from '../assets/handbag.png';
 import perfumeImg from '../assets/perfume.png';
@@ -78,10 +78,19 @@ const WISHLIST_ITEMS = [
 ];
 
 export default function Wishlist() {
-  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
+  const [customAmount, setCustomAmount] = useState('');
 
   const handleSendGift = (item) => {
-    setIsPaymentModalOpen(true);
+    handleCheckout(`Gift: ${item.name}`, item.numericPrice);
+  };
+
+  const handleCustomTribute = (e) => {
+    e.preventDefault();
+    if (customAmount && !isNaN(customAmount) && Number(customAmount) > 0) {
+      handleCheckout('Custom Tribute', Number(customAmount));
+    } else {
+      alert('Please enter a valid amount.');
+    }
   };
 
   return (
@@ -154,21 +163,31 @@ export default function Wishlist() {
           Beg to Pay a Custom Amount
         </h2>
 
-        <div style={{ textAlign: 'center', marginTop: '2rem' }}>
-          <button 
-            onClick={() => setIsPaymentModalOpen(true)}
-            className="wishlist__tribute-btn"
-            style={{ display: 'inline-block', textDecoration: 'none', border: 'none', cursor: 'pointer' }}
-          >
-            Submit Payment
-          </button>
-        </div>
+        <form onSubmit={handleCustomTribute} style={{ textAlign: 'center', marginTop: '2rem' }}>
+          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1rem', marginBottom: '1.5rem', flexWrap: 'wrap' }}>
+            <div style={{ position: 'relative' }}>
+              <span style={{ position: 'absolute', left: '15px', top: '50%', transform: 'translateY(-50%)', color: 'var(--color-gold)', fontSize: '1.2rem', fontWeight: 'bold' }}>$</span>
+              <input 
+                type="number" 
+                min="5"
+                placeholder="100" 
+                value={customAmount}
+                onChange={(e) => setCustomAmount(e.target.value)}
+                className="wishlist__tribute-input" 
+                style={{ paddingLeft: '35px', maxWidth: '200px' }}
+                required
+              />
+            </div>
+            <button 
+              type="submit"
+              className="wishlist__tribute-btn"
+              style={{ display: 'inline-block', textDecoration: 'none', border: 'none', cursor: 'pointer' }}
+            >
+              Submit Payment
+            </button>
+          </div>
+        </form>
       </section>
-
-      <PaymentModal 
-        isOpen={isPaymentModalOpen} 
-        onClose={() => setIsPaymentModalOpen(false)} 
-      />
     </div>
   );
 }

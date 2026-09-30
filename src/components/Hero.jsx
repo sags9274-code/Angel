@@ -2,10 +2,9 @@ import { useState } from 'react';
 import angelHero from '../assets/angel-hero.jpeg';
 import angelProfile from '../assets/angel-profile.jpeg';
 import ProfileCard from './ProfileCard';
-import PaymentModal from './PaymentModal';
+import { handleCheckout } from '../utils/checkout';
 
 export default function Hero() {
-  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   return (
     <section className="hero" id="hero-section">
       {/* Background */}
@@ -44,11 +43,11 @@ export default function Hero() {
 
           {/* CTA Buttons */}
           <div className="hero__ctas">
-            <button className="hero__cta-primary" id="cta-vip" onClick={() => setIsPaymentModalOpen(true)}>
+            <button className="hero__cta-primary" id="cta-vip" onClick={() => handleCheckout('VIP Tier Submission', 200)}>
               <span className="hero__cta-icon">✦</span>
               Submit to My VIP Tier
             </button>
-            <button className="hero__cta-secondary" id="cta-tribute" onClick={() => setIsPaymentModalOpen(true)}>
+            <button className="hero__cta-secondary" id="cta-tribute" onClick={() => handleCheckout('Immediate Tribute', 50)}>
               <span className="hero__cta-icon">🎁</span>
               Offer Immediate Tribute
             </button>
@@ -76,11 +75,6 @@ export default function Hero() {
           <ProfileCard />
         </div>
       </div>
-
-      <PaymentModal 
-        isOpen={isPaymentModalOpen} 
-        onClose={() => setIsPaymentModalOpen(false)} 
-      />
     </section>
   );
 }
