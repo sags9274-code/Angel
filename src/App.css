@@ -982,9 +982,24 @@
   justify-content: space-between;
 }
 
-.wishlist__card-icon {
-  font-size: 2.2rem;
-  filter: grayscale(0.2);
+.wishlist__card-image-container {
+  width: 60px;
+  height: 60px;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  border: 1px solid rgba(212, 168, 67, 0.3);
+  box-shadow: var(--shadow-sm);
+}
+
+.wishlist__card-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--duration-normal) var(--ease-out);
+}
+
+.wishlist__card:hover .wishlist__card-image {
+  transform: scale(1.1);
 }
 
 .wishlist__card-priority {

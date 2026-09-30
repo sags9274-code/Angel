@@ -147,9 +147,6 @@
   box-shadow: 0 20px 40px rgba(236, 72, 153, 0.2);
 }
 
-.wishlist__card:hover .wishlist__card-icon {
-  animation: wiggle 0.5s ease-in-out;
-}
 
 .tasks__card {
   transition: all 0.3s var(--ease-out);

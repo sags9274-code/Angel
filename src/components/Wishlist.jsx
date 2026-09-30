@@ -1,4 +1,14 @@
 import { useState, useRef } from 'react';
+import PaymentModal from './PaymentModal';
+
+import handbagImg from '../assets/handbag.png';
+import perfumeImg from '../assets/perfume.png';
+import getawayImg from '../assets/getaway.png';
+import diningImg from '../assets/dining.png';
+import spaImg from '../assets/spa.png';
+import jewelryImg from '../assets/jewelry.png';
+import robeImg from '../assets/robe.png';
+import cashImg from '../assets/cash.png';
 
 const WISHLIST_ITEMS = [
   {
@@ -7,7 +17,7 @@ const WISHLIST_ITEMS = [
     price: '$2,500',
     numericPrice: 2500,
     priority: 'High',
-    emoji: '👜',
+    image: handbagImg,
   },
   {
     id: 'luxury-perfume',
@@ -15,7 +25,7 @@ const WISHLIST_ITEMS = [
     price: '$350',
     numericPrice: 350,
     priority: 'Medium',
-    emoji: '✨',
+    image: perfumeImg,
   },
   {
     id: 'weekend-getaway',
@@ -23,7 +33,7 @@ const WISHLIST_ITEMS = [
     price: '$5,000',
     numericPrice: 5000,
     priority: 'High',
-    emoji: '✈️',
+    image: getawayImg,
   },
   {
     id: 'fine-dining',
@@ -31,7 +41,7 @@ const WISHLIST_ITEMS = [
     price: '$500',
     numericPrice: 500,
     priority: 'Medium',
-    emoji: '🍾',
+    image: diningImg,
   },
   {
     id: 'spa-day',
@@ -39,7 +49,7 @@ const WISHLIST_ITEMS = [
     price: '$800',
     numericPrice: 800,
     priority: 'Low',
-    emoji: '🧖‍♀️',
+    image: spaImg,
   },
   {
     id: 'jewelry-set',
@@ -47,7 +57,7 @@ const WISHLIST_ITEMS = [
     price: '$1,200',
     numericPrice: 1200,
     priority: 'High',
-    emoji: '💎',
+    image: jewelryImg,
   },
   {
     id: 'silk-robe',
@@ -55,7 +65,7 @@ const WISHLIST_ITEMS = [
     price: '$250',
     numericPrice: 250,
     priority: 'Low',
-    emoji: '👘',
+    image: robeImg,
   },
   {
     id: 'cash-tribute',
@@ -63,13 +73,15 @@ const WISHLIST_ITEMS = [
     price: '$100+',
     numericPrice: 100,
     priority: 'Medium',
-    emoji: '💸',
+    image: cashImg,
   },
 ];
 
 export default function Wishlist() {
+  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
+
   const handleSendGift = (item) => {
-    window.open('https://ouish.co/tribute', '_blank');
+    setIsPaymentModalOpen(true);
   };
 
   return (
@@ -93,13 +105,12 @@ export default function Wishlist() {
             id={`wishlist-card-${item.id}`}
           >
             <div className="wishlist__card-header">
-              <span
-                className="wishlist__card-icon"
-                id={`wishlist-icon-${item.id}`}
-                aria-hidden="true"
+              <div
+                className="wishlist__card-image-container"
+                id={`wishlist-image-${item.id}`}
               >
-                {item.emoji}
-              </span>
+                <img src={item.image} alt={item.name} className="wishlist__card-image" />
+              </div>
               <span
                 className={`wishlist__card-priority wishlist__card-priority--${item.priority.toLowerCase()} wishlist__badge wishlist__badge--${item.priority.toLowerCase()}`}
                 id={`wishlist-badge-${item.id}`}
@@ -144,17 +155,20 @@ export default function Wishlist() {
         </h2>
 
         <div style={{ textAlign: 'center', marginTop: '2rem' }}>
-          <a 
-            href="https://ouish.co/tribute" 
-            target="_blank" 
-            rel="noopener noreferrer" 
+          <button 
+            onClick={() => setIsPaymentModalOpen(true)}
             className="wishlist__tribute-btn"
-            style={{ display: 'inline-block', textDecoration: 'none' }}
+            style={{ display: 'inline-block', textDecoration: 'none', border: 'none', cursor: 'pointer' }}
           >
             Submit Payment
-          </a>
+          </button>
         </div>
       </section>
+
+      <PaymentModal 
+        isOpen={isPaymentModalOpen} 
+        onClose={() => setIsPaymentModalOpen(false)} 
+      />
     </div>
   );
 }
