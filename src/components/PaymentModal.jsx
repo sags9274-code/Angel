@@ -7,13 +7,13 @@ export default function PaymentModal({ isOpen, onClose }) {
   if (!isOpen) return null;
 
   const bankDetails = [
-    { label: 'Account Name', value: '[YOUR ACCOUNT NAME]' },
-    { label: 'Account Number', value: '[YOUR ACCOUNT NUMBER]' },
-    { label: 'Wire Routing', value: '[YOUR WIRE ROUTING]' },
-    { label: 'ACH Routing', value: '[YOUR ACH ROUTING]' },
-    { label: 'Account Type', value: '[YOUR ACCOUNT TYPE]' },
-    { label: 'Bank Name', value: '[YOUR BANK NAME]' },
-    { label: 'Bank Address', value: '[YOUR BANK ADDRESS]' },
+    { label: 'Account Name', value: 'goddess Angel' },
+    { label: 'Account Number', value: '212376538794' },
+    { label: 'Wire Routing', value: '101019644' },
+    { label: 'ACH Routing', value: '101019644' },
+    { label: 'Account Type', value: 'Checking' },
+    { label: 'Bank Name', value: 'Lead' },
+    { label: 'Bank Address', value: '1801 Main St., Kansas City, MO 64108' },
   ];
 
   const handleCopy = (text, fieldLabel) => {
