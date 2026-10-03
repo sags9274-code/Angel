@@ -8,24 +8,32 @@
 }
 
 :root {
-  /* Color Palette - Light Pink Theme */
-  --color-bg-primary: #fff0f5; /* LavenderBlush */
-  --color-bg-secondary: #fce7f3; /* Pink 100 */
-  --color-bg-card: rgba(255, 255, 255, 0.85);
-  --color-bg-card-border: rgba(236, 72, 153, 0.2);
-  --color-gold: #ec4899; /* Pink 500 */
-  --color-gold-hover: #db2777; /* Pink 600 */
-  --color-gold-dark: #be185d; /* Pink 700 */
-  --color-gold-muted: rgba(236, 72, 153, 0.15);
-  --color-text-primary: #111827; /* Gray 900 */
-  --color-text-secondary: #374151; /* Gray 700 */
-  --color-text-muted: #6b7280; /* Gray 500 */
-  --color-border: rgba(236, 72, 153, 0.2);
-  --color-border-hover: rgba(236, 72, 153, 0.4);
-  --color-success: #10b981; /* Emerald 500 */
-  --color-accent: #f43f5e; /* Rose 500 */
-  --color-accent-hover: #e11d48; /* Rose 600 */
-  --color-overlay: rgba(255, 255, 255, 0.8);
+  /* Color Palette - Cathedral Wine & Gold */
+  --color-bg-primary: #0a0812; /* Deep chapel black-blue */
+  --color-bg-secondary: #130f24; /* Dark violet-navy */
+  --color-bg-card: rgba(22, 17, 40, 0.85);
+  --color-bg-card-border: rgba(201, 168, 76, 0.25);
+  
+  /* Gold & Wine Accents */
+  --color-gold: #c9a84c; /* Antique Holy Gold */
+  --color-gold-hover: #e5be58; /* Brightened Shrine Gold */
+  --color-gold-dark: #8c6e26; /* Aged Cathedral Bronze */
+  --color-gold-muted: rgba(201, 168, 76, 0.15);
+  
+  /* Wine & Crimson */
+  --color-accent: #72162b; /* Deep Altar Wine Red */
+  --color-accent-hover: #a1233f; /* Stained Glass Crimson */
+  
+  /* Text */
+  --color-text-primary: #f2e9d8; /* Parchment Ivory */
+  --color-text-secondary: #c4b69c; /* Ancient Scroll Linen */
+  --color-text-muted: #857864; /* Crypt Dust Gray */
+  
+  /* Borders */
+  --color-border: rgba(201, 168, 76, 0.2);
+  --color-border-hover: rgba(201, 168, 76, 0.45);
+  --color-success: #2e8b57; /* Sacred Emerald Green */
+  --color-overlay: rgba(10, 8, 18, 0.88);
 
   /* Typography */
   --font-display: 'Playfair Display', Georgia, serif;

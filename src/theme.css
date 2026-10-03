@@ -39,7 +39,7 @@
   );
   background-size: 200% auto;
   animation: heartbeat-pulse 3s infinite ease-in-out, shimmer-sweep 4s infinite linear;
-  box-shadow: 0 0 15px rgba(236, 72, 153, 0.3);
+  box-shadow: 0 0 15px rgba(201, 168, 76, 0.3);
   position: relative;
   overflow: hidden;
 }
@@ -53,7 +53,7 @@
   background-size: 200% auto;
   animation: shimmer-sweep 2s infinite linear;
   transform: translateY(-3px) scale(1.02);
-  box-shadow: 0 12px 30px rgba(236, 72, 153, 0.5), 0 0 40px rgba(236, 72, 153, 0.3);
+  box-shadow: 0 12px 30px rgba(201, 168, 76, 0.5), 0 0 40px rgba(201, 168, 76, 0.3);
   color: #fff;
   text-shadow: none;
 }
@@ -75,8 +75,8 @@
 .hero__cta-secondary:hover {
   border-color: var(--color-accent);
   color: var(--color-accent);
-  background: rgba(244, 63, 94, 0.05);
-  box-shadow: 0 0 20px rgba(244, 63, 94, 0.3);
+  background: rgba(153, 0, 0, 0.05);
+  box-shadow: 0 0 20px rgba(153, 0, 0, 0.3);
   transform: translateY(-3px);
 }
 
@@ -86,23 +86,23 @@
 }
 .wall__card-delete:hover {
   background: var(--color-accent-hover);
-  box-shadow: 0 0 15px rgba(244, 63, 94, 0.8);
+  box-shadow: 0 0 15px rgba(153, 0, 0, 0.8);
   transform: scale(1.1);
 }
 
 /* ----- PROFILE CARD LEVITATION ----- */
 .profile-card {
   animation: levitate 6s infinite ease-in-out;
-  border: 1px solid rgba(236, 72, 153, 0.2);
+  border: 1px solid rgba(201, 168, 76, 0.2);
   transition: all 0.5s var(--ease-out);
 }
 
 .profile-card:hover {
-  border-color: rgba(236, 72, 153, 0.4);
+  border-color: rgba(201, 168, 76, 0.4);
 }
 
 .profile-card__badge {
-  background: rgba(236, 72, 153, 0.9);
+  background: rgba(201, 168, 76, 0.9);
   border-color: var(--color-gold);
   color: white;
   animation: heartbeat-pulse 2s infinite;
@@ -144,7 +144,7 @@
 }
 .wishlist__card:hover {
   transform: translateY(-8px) scale(1.02);
-  box-shadow: 0 20px 40px rgba(236, 72, 153, 0.2);
+  box-shadow: 0 20px 40px rgba(201, 168, 76, 0.2);
 }
 
 
@@ -153,7 +153,7 @@
 }
 .tasks__card:hover {
   transform: translateX(8px);
-  background: rgba(236, 72, 153, 0.03);
+  background: rgba(201, 168, 76, 0.03);
   border-left: 3px solid var(--color-gold);
 }
 
@@ -209,7 +209,7 @@
 }
 
 .navbar__logo-text {
-  text-shadow: 0 0 10px rgba(236, 72, 153, 0.3);
+  text-shadow: 0 0 10px rgba(201, 168, 76, 0.3);
 }
 
 /* ----- MOBILE MENU UPGRADE ----- */
@@ -241,7 +241,7 @@
 
 .dashboard-stat-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 15px 35px rgba(236, 72, 153, 0.2);
+  box-shadow: 0 15px 35px rgba(201, 168, 76, 0.2);
 }
 
 .dashboard-table tbody tr {
@@ -258,7 +258,7 @@
 }
 .profile-avatar-large:hover {
   transform: scale(1.05);
-  box-shadow: 0 0 25px rgba(236, 72, 153, 0.4);
+  box-shadow: 0 0 25px rgba(201, 168, 76, 0.4);
 }
 
 .profile-avatar-loading {
@@ -308,12 +308,12 @@ body::after {
   width: 100vw;
   height: 100vh;
   background-image: 
-    radial-gradient(1px 1px at 20px 30px, rgba(236, 72, 153, 0.2), transparent),
-    radial-gradient(1px 1px at 40px 70px, rgba(236, 72, 153, 0.15), transparent),
-    radial-gradient(2px 2px at 90px 40px, rgba(236, 72, 153, 0.2), transparent),
-    radial-gradient(1.5px 1.5px at 160px 120px, rgba(236, 72, 153, 0.1), transparent),
-    radial-gradient(1px 1px at 110px 90px, rgba(244, 63, 94, 0.15), transparent),
-    radial-gradient(1.5px 1.5px at 180px 50px, rgba(236, 72, 153, 0.12), transparent);
+    radial-gradient(1px 1px at 20px 30px, rgba(201, 168, 76, 0.2), transparent),
+    radial-gradient(1px 1px at 40px 70px, rgba(201, 168, 76, 0.15), transparent),
+    radial-gradient(2px 2px at 90px 40px, rgba(201, 168, 76, 0.2), transparent),
+    radial-gradient(1.5px 1.5px at 160px 120px, rgba(201, 168, 76, 0.1), transparent),
+    radial-gradient(1px 1px at 110px 90px, rgba(153, 0, 0, 0.15), transparent),
+    radial-gradient(1.5px 1.5px at 180px 50px, rgba(201, 168, 76, 0.12), transparent);
   background-size: 200px 200px;
   z-index: -1;
   opacity: 0.5;
@@ -337,5 +337,5 @@ body::after {
   transform: translateY(-4px);
 }
 .hero__stat:hover .hero__stat-value {
-  text-shadow: 0 0 20px rgba(236, 72, 153, 0.5);
+  text-shadow: 0 0 20px rgba(201, 168, 76, 0.5);
 }
